@@ -5,14 +5,16 @@
         <ion-title>My Profile</ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content>
       <ion-card>
-        <img v-if="account" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" class="img" />
+        <img v-if="account" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png"
+          class="img" />
         <ion-card-header>
           <ion-card-subtitle>Account Information</ion-card-subtitle>
           <ion-card-title v-if="account">{{ account.name }}</ion-card-title>
           <ion-card-title v-else>
-              <p>Unable to acquire account data.</p>
+            <p>Unable to acquire account data.</p>
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
@@ -31,8 +33,18 @@
 </template>
 
 <script>
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage } from '@ionic/vue';
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonPage,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle
+} from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { getAccountData } from '../services/getRequests.js'; // Replace with your account service
 
@@ -68,5 +80,6 @@ export default {
   height: 200px;
   object-fit: scale-down;
 }
+
 /* Your existing styles */
 </style>

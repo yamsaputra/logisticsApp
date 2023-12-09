@@ -4,16 +4,26 @@ import HomePage from '../views/HomePage.vue'
 import FlyerPage from '../views/FlyerPage.vue'
 import AboutPage from '../views/AboutPage.vue'
 import AccountPage from '../views/AccountPage.vue';
+import LoginPage from '../views/LoginPage.vue';
+import SignupPage from '../views/SignupPage.vue';
 
 const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/login'
   },
   {
     path: '/home',
     name: 'Home',
     component: HomePage
+  },
+  {
+    path: '/login',
+    component: LoginPage
+  },
+  {
+    path: '/signup',
+    component: SignupPage
   },
   {
     path: '/',
@@ -39,7 +49,7 @@ const routes = [
       {
         path: '/about',
         component: AboutPage
-      },
+      }
     ]
   }
 ];
