@@ -8,8 +8,8 @@
 
     <ion-content>
       <ion-card>
-        <img v-if="account" alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png"
-          class="img" />
+        <img v-if="account.gender === 'male'" alt="male profile" src="../../img/male.jpg" class="img" />
+        <img v-else alt="female profile" src="../../img/female.jpg" class="img" />
         <ion-card-header>
           <ion-card-subtitle>Account Information</ion-card-subtitle>
           <ion-card-title v-if="account">{{ account.name }}</ion-card-title>
@@ -20,9 +20,10 @@
         <ion-card-content>
           <div class="account-info">
             <div v-if="account">
+              <p>{{ account.age }} years old</p>
               <p>Gender: {{ account.gender }}</p>
-              <p>Age: {{ account.age }}</p>
               <p>Email: {{ account.email }}</p>
+              <p>Phone Number: {{ account.phone }}</p>
               <p>Location: {{ account.location }}</p>
             </div>
           </div>
@@ -47,6 +48,7 @@ import {
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { getAccountData } from '../services/getRequests.js'; // Replace with your account service
+import { male } from 'ionicons/icons';
 
 export default {
   components: {

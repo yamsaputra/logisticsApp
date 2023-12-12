@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Login to MitFlyer</ion-title>
+        <ion-title>MitFlyer</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -15,29 +15,30 @@
         </ion-row>
 
         <ion-row>
-          <ion-col size="12">
-            <ion-item>
-              <ion-label position="floating">E-mail</ion-label>
-              <ion-input type="email" v-model="email"></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
+          <ion-col size="12" class="ion-text-center">
+            <form @submit.prevent="submitForm">
+              <ion-item>
+                <ion-label position="floating">E-mail
+                  <ion-input type="email" aria-label="Email" v-model="email"></ion-input>
+                </ion-label>
+              </ion-item>
 
-        <ion-row>
-          <ion-col size="12">
-            <ion-item>
-              <ion-label position="floating">Password</ion-label>
-              <ion-input type="password" v-model="password"></ion-input>
-            </ion-item>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" aria-label="Password" v-model="password"></ion-input>
+              </ion-item>
+              <router-link to="/home">
+              <ion-button href="" expand="block" @click="login">Login</ion-button>
+            </router-link>
+            </form>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="12" class="ion-text-center">
-            <ion-button expand="block" @click="login">Login</ion-button>
             <p>New to MitFlyer?</p>
             <router-link to="/signup">
-                <ion-button expand="block">Sign-up!</ion-button>
+              <ion-button expand="block">Sign-up!</ion-button>
             </router-link>
           </ion-col>
         </ion-row>
@@ -46,9 +47,38 @@
   </ion-page>
 </template>
 
+
 <script>
-import { IonButton } from '@ionic/vue';
+import {
+  IonButton,
+  IonTitle,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg
+} from '@ionic/vue';
+
 export default {
+  components: {
+    IonButton,
+    IonTitle,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonImg
+  },
   data() {
     return {
       email: '',

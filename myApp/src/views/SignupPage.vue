@@ -11,15 +11,15 @@
       <ion-list>
         <ion-item>
           <ion-label position="floating">Name</ion-label>
-          <ion-input type="text" v-model="name"></ion-input>
+          <ion-input aria-label="Name" type="text" v-model="name"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Email</ion-label>
-          <ion-input type="email" v-model="email"></ion-input>
+          <ion-input aria-label="Email" type="email" v-model="email"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Password</ion-label>
-          <ion-input type="password" v-model="password"></ion-input>
+          <ion-input aria-label="Password" type="password" v-model="password"></ion-input>
         </ion-item>
       </ion-list>
       <ion-button expand="full" @click="signUp">Sign Up</ion-button>
