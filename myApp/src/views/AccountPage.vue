@@ -1,3 +1,13 @@
+<style scoped>
+.img {
+  width: 100%;
+  height: 200px;
+  object-fit: scale-down;
+}
+
+/* Your existing styles */
+</style>
+
 <template>
   <ion-page>
     <ion-header>
@@ -8,8 +18,9 @@
 
     <ion-content>
       <ion-card>
-        <img v-if="account.gender === 'male'" alt="male profile" src="../../img/male.jpg" class="img" />
-        <img v-else alt="female profile" src="../../img/female.jpg" class="img" />
+        <img v-if="account && account.gender === 'Male'" alt="male profile" src="../assets/male.jpg" class="img" />
+        <img v-else-if="account && account.gender === 'Female'" alt="female profile" src="../assets/female.jpg" class="img" />
+        <img v-else alt="default profile" src="../assets/default.png" class="img" />
         <ion-card-header>
           <ion-card-subtitle>Account Information</ion-card-subtitle>
           <ion-card-title v-if="account">{{ account.name }}</ion-card-title>
@@ -24,7 +35,7 @@
               <p>Gender: {{ account.gender }}</p>
               <p>Email: {{ account.email }}</p>
               <p>Phone Number: {{ account.phone }}</p>
-              <p>Location: {{ account.location }}</p>
+              <p>Location: {{ account.location }}</p> // Stadteil statt nur Städtenamen
             </div>
           </div>
         </ion-card-content>
@@ -48,7 +59,6 @@ import {
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { getAccountData } from '../services/getRequests.js'; // Replace with your account service
-import { male } from 'ionicons/icons';
 
 export default {
   components: {
@@ -75,13 +85,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.img {
-  width: 100%;
-  height: 200px;
-  object-fit: scale-down;
-}
-
-/* Your existing styles */
-</style>

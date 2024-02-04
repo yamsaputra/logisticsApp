@@ -1,4 +1,4 @@
-
+// GET Request to fetch account data in AccountPage.vue
 export const getAccountData = async () => {
   try {
     const response = await fetch('http://localhost:4000/person');

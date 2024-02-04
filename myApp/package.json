@@ -1,15 +1,10 @@
 {
-  "name": "myApp",
-  "private": true,
-  "version": "0.0.1",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test:e2e": "cypress run",
-    "test:unit": "vitest",
-    "lint": "eslint"
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
   },
   "dependencies": {
     "@capacitor/app": "5.0.6",
@@ -19,26 +14,31 @@
     "@capacitor/status-bar": "5.0.6",
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
+    "fs": "^0.0.1-security",
     "ionicons": "^7.0.0",
-    "pouchdb": "^8.0.1",
+    "mock-aws-s3": "^4.0.2",
+    "vite-plugin-html": "^3.2.2",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "5.5.1",
-    "@vitejs/plugin-legacy": "^4.0.2",
+    "@vitejs/plugin-legacy": "^5.3.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",
     "@vue/test-utils": "^2.3.0",
-    "cypress": "^12.7.0",
+    "cypress": "^13.6.3",
     "eslint": "^8.35.0",
     "eslint-plugin-vue": "^9.9.0",
     "jsdom": "^22.1.0",
     "terser": "^5.4.0",
-    "typescript": "^5.1.6",
-    "vite": "^4.3.9",
-    "vitest": "^0.32.2",
-    "vue-tsc": "^1.0.24"
+    "vite": "^5.0.12"
   },
-  "description": "An Ionic project"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ionic serve --port 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
