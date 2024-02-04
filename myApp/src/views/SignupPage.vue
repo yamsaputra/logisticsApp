@@ -1,7 +1,8 @@
 <style scoped>
 /* Add your custom styles here */
 .inputLabel {
-  font-size: 13px; /* Adjust the font size as needed */
+  font-size: 13px;
+  /* Adjust the font size as needed */
 }
 </style>
 
@@ -42,7 +43,10 @@
               <ion-input aria-placeholder="Password" type="password" v-model="reenterPassword"></ion-input>
             </ion-item>
           </ion-list>
-          <ion-button expand="full" @click="submitForm">Sign Up</ion-button>
+          <ion-button v-if="!isSignUpSuccess" expand="full" @click="signUp">Sign Up</ion-button>
+          <router-link v-if="isSignUpSuccess" to="/login">
+            <ion-button expand="full">Continue to Login</ion-button>
+          </router-link>
         </ion-card>
       </form>
     </ion-content>
@@ -67,20 +71,42 @@ export default {
       age: '',
       email: '',
       password: '',
-      reenterPassword: ''
+      reenterPassword: '',
+      isSignUpSuccess: false,
     };
   },
-  setup() {
-    const account = ref(null);
-    
-    onMounted(async () => {
+  methods: {
+    async signUp() {
       try {
-        const data = await registerUser();
-        account.value = data;
+        const formData = {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          age: this.age,
+          email: this.email,
+          password: this.password
+        };
+
+        if (this.password !== this.reenterPassword) {
+          window.alert("Passwords do not match! Please re-enter.");
+          return;
+        }
+
+        const response = await registerUser(formData);
+        if (response.success) {
+          console.log('User signed up:', response);
+          this.confirmationMessage = 'User signed up successfully!';
+          this.isSignUpSuccess = true;
+          window.alert("User signed up successfully!");
+        } else {
+          console.error('Failed to sign up:', response);
+          window.alert("E-Mail already exists!");
+          this.errorMessage = 'Failed to sign up. Please try again later.';
+        }
       } catch (error) {
-        console.error('Error fetching account data:', error);
+        console.error('Error signing up:', error);
+        this.errorMessage = 'Failed to sign up. Please try again later.';
       }
-    });
+    },
   }
 };
 </script>
