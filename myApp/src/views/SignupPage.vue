@@ -10,7 +10,8 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Sign-up for ConsignEase</ion-title>
+        <ion-title v-if="!isSignUpSuccess">Sign-up for TrustTrip</ion-title>
+        <ion-title v-else>Thank you for trusting us!</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -55,58 +56,104 @@
 
 <script>
 import { IonButton, IonHeader } from '@ionic/vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { registerUser } from '../services/postRequests.js';
-/* import { ref, onMounted } from 'vue'; */
 
 export default {
   components: {
     IonButton,
     IonHeader
   },
-  data() {
-    return {
-      firstName: '',
-      lastName: '',
-      age: '',
-      email: '',
-      password: '',
-      reenterPassword: '',
-      isSignUpSuccess: false,
-    };
-  },
-  methods: {
-    async signUp() {
+
+  setup() {
+    const firstName = ref('');
+    const lastName = ref('');
+    const age = ref('');
+    const email = ref('');
+    const password = ref('');
+    const reenterPassword = ref('');
+    const isSignUpSuccess = ref(false);
+    const errorMessage = ref(null);
+
+    const signUp = async () => {
       try {
         const formData = {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          age: this.age,
-          email: this.email,
-          password: this.password
+          firstName: firstName.value,
+          lastName: lastName.value,
+          age: age.value,
+          email: email.value,
+          password: password.value,
+          password: reenterPassword.value
         };
+        console.log(formData);
 
-        if (this.password !== this.reenterPassword) {
+        if (firstName.value == null) {
+          window.alert("Please enter your first name.");
+          return;
+        }
+
+        if (lastName.value == null) {
+          window.alert("Please enter your last name.");
+          return;
+        }
+
+        if(age.value == null) {
+          window.alert("Please enter your age.");
+          return;
+        }
+
+        if(age.value < 18) {
+          window.alert("You must be at least 18 years old to sign up.");
+          return;
+        }
+
+        if (email.value == null) {
+          window.alert("Please enter your e-mail.");
+          return;
+        }
+
+        if (password.value == null) {
+          window.alert("Please enter a password.");
+          return;
+        }
+
+        if (password.value.length < 7) {
+          window.alert("Password must be at least 8 characters long.");
+          return;
+        }
+
+        if (password.value !== reenterPassword.value) {
           window.alert("Passwords do not match! Please re-enter.");
           return;
         }
 
         const response = await registerUser(formData);
+
         if (response.success) {
           console.log('User signed up:', response);
-          this.confirmationMessage = 'User signed up successfully!';
-          this.isSignUpSuccess = true;
+          isSignUpSuccess.value = true;
           window.alert("User signed up successfully!");
-        } else {
-          console.error('Failed to sign up:', response);
-          window.alert("E-Mail already exists!");
-          this.errorMessage = 'Failed to sign up. Please try again later.';
+        } else if (response.status === 400) {
+          window.alert('Email already exists.');
+          console.error('Existing e-mail found in database.', response);
         }
+
       } catch (error) {
         console.error('Error signing up:', error);
-        this.errorMessage = 'Failed to sign up. Please try again later.';
       }
-    },
-  }
+    };
+
+    return {
+      firstName,
+      lastName,
+      age,
+      email,
+      password,
+      reenterPassword,
+      isSignUpSuccess,
+      errorMessage,
+      signUp
+    };
+  },
 };
 </script>

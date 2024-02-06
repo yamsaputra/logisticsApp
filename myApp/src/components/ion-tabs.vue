@@ -5,27 +5,31 @@
 
             <ion-tab-bar slot="bottom">
 
-                <ion-tab-button tab="search" href="/home">
+                <router-link to="/home">
+                <ion-tab-button tab="home" >
                     <ion-icon :icon="search" />
                     <ion-label>Search</ion-label>
                 </ion-tab-button>
+            </router-link>
 
-                <ion-tab-button tab="search" href="/home">
-                    <ion-icon :icon="search" />
-                    <ion-label>My Consigns</ion-label>
+            <router-link to="/package">
+                <ion-tab-button tab="package" >
+                    <ion-icon :icon="cubeOutline" />
+                    <ion-label>My Packages</ion-label>
                 </ion-tab-button>
+            </router-link>
 
-                <ion-tab-button tab="home" href="/fly">
+                <ion-tab-button tab="trust" >
                     <ion-icon :icon="paperPlaneOutline" />
-                    <ion-label>Be a Flyer</ion-label>
+                    <ion-label>Be a Trustee</ion-label>
                 </ion-tab-button>
 
-                <ion-tab-button tab="Contact us" href="/messages">
-                    <ion-icon :icon="chatbox" />
-                    <ion-label>Nachrichten</ion-label>
+                <ion-tab-button tab="message" >
+                    <ion-icon :icon="chatbubblesOutline" />
+                    <ion-label>Messages</ion-label>
                 </ion-tab-button>
 
-                <ion-tab-button tab="Contact us" href="/account">
+                <ion-tab-button tab="account" >
                     <ion-icon :icon="personOutline" />
                     <ion-label>Account</ion-label>
                 </ion-tab-button>
@@ -38,7 +42,7 @@
 <script>
 import { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/vue';
 
-import { paperPlaneOutline, radio, personOutline, search, mail, chatbox } from 'ionicons/icons';
+import { paperPlaneOutline, radio, personOutline, search, chatbubblesOutline, cubeOutline } from 'ionicons/icons';
 
 export default {
     components: { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon },
@@ -48,6 +52,8 @@ export default {
             radio,
             personOutline,
             search,
+            chatbubblesOutline,
+            cubeOutline
         };
     },
 };

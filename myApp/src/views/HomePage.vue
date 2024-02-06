@@ -11,6 +11,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  color:black;
 }
 </style>
 
@@ -18,12 +19,12 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>ConsignEase</ion-title>
+        <ion-title>TrustTrip</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <div class="example-content">
-        <IonSearchbar animated="true" placeholder="Search" class="centered-searchbar"></IonSearchbar>
+        <IonSearchbar animated="true" placeholder="Search for a destination" v-model="searchTerm" class="centered-searchbar"></IonSearchbar>
       </div>
     </ion-content>
   </ion-page>
@@ -41,7 +42,6 @@ import {
   IonDatetimeButton, // Add this line
 } from '@ionic/vue';
 
-import { ref, defineComponent } from 'vue';
 
 export default {
   components: {

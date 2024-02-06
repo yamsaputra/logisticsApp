@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import store from './store';
 
 import { IonicVue, 
   IonPage,
@@ -114,6 +115,8 @@ app.component('IonCardTitle', IonCardTitle);
 app.component('IonCheckbox', IonCheckbox);
 app.component('IonChip', IonChip);
 app.component('IonImg', IonImg);
+
+app.use(store);
 
   
 router.isReady().then(() => {

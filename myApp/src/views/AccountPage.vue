@@ -18,24 +18,23 @@
 
     <ion-content>
       <ion-card>
-        <img v-if="account && account.gender === 'Male'" alt="male profile" src="../assets/male.jpg" class="img" />
-        <img v-else-if="account && account.gender === 'Female'" alt="female profile" src="../assets/female.jpg" class="img" />
-        <img v-else alt="default profile" src="../assets/default.png" class="img" />
+        <!-- <img v-if="account && account.gender === 'Male'" alt="male profile" src="../assets/male.jpg" class="img" />
+        <img v-else-if="account && account.gender === 'Female'" alt="female profile" src="../assets/female.jpg" class="img" /> -->
+        <img src="../assets/default.png" class="img" />
         <ion-card-header>
-          <ion-card-subtitle>Account Information</ion-card-subtitle>
-          <ion-card-title v-if="account">{{ account.name }}</ion-card-title>
-          <ion-card-title v-else>
+<!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
+          <ion-card-title v-if="loading">
             <p>Unable to acquire account data.</p>
           </ion-card-title>
+          <ion-card-title v-else>Greetings, {{ fname }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <div class="account-info">
-            <div v-if="account">
-              <p>{{ account.age }} years old</p>
-              <p>Gender: {{ account.gender }}</p>
-              <p>Email: {{ account.email }}</p>
-              <p>Phone Number: {{ account.phone }}</p>
-              <p>Location: {{ account.location }}</p> // Stadteil statt nur Städtenamen
+            <ion-card-title v-if="loading">
+            <p>Unable to acquire e-mail.</p>
+          </ion-card-title>
+            <div v-else>
+              <p>Email: {{ email }}</p>
             </div>
           </div>
         </ion-card-content>
@@ -55,33 +54,47 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardTitle
+  IonCardTitle,
+  IonTabBar
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
-import { getAccountData } from '../services/getRequests.js'; // Replace with your account service
+import { useStore } from 'vuex'; // Replace with your store
+import { getUserData } from '../services/getRequests.js'; // Replace with your account service
 
 export default {
   components: {
     IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle
+    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar
   },
   setup() {
-    const account = ref(null);
+    let fname = ref();
+    let email = ref();
+    let lname = ref();
+    let loading = ref(true);
+
 
     // Fetch account data on component mount
     onMounted(async () => {
       try {
         // Simulate fetching account data from the backend
-        const data = await getAccountData(); // Replace with your backend URL
+        const store = useStore();
+        console.log(store.state.user);
+        const userEmail = store.state.user;
+        console.log(userEmail);
 
-        // Assign the fetched data to the account ref
-        account.value = data;
+        let data = await getUserData(userEmail); // Replace with your backend URL
+
+        fname.value = data.user.fname;
+        lname.value = data.user.lname;
+        email.value = data.user.email;
+
+        loading.value = false;
       } catch (error) {
         console.error('Error fetching account data:', error);
       }
     });
 
-    return { account };
-  },
-};
+    return { fname, lname, email, loading };
+  }
+};	
 </script>

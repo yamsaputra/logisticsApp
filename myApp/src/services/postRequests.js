@@ -1,56 +1,81 @@
-export async function loginUser(email, password) {
+export async function registerUser(formData) {
   try {
-    const userData = {
-      email,
-      password,
-    };
-
-    const response = await fetch("http://localhost:4000/api/login", {
+    const response = await fetch("http://localhost:4000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(formData),
     });
 
     const data = await response.json();
 
-    if (response.ok) {
+    if (response.status === 201) {
+      console.log("User created successfully.");
+      return { success: true, message: data.message };
+    } else if (response.status === 400) {
+      console.error("The E-Mail is already being used. (L2)");
+      return response;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return { success: false, message: "Request to the server failed." };
+  }
+}
+
+export async function loginUser(loginData) {
+  try {
+    const { email, password } = loginData;
+
+    const response = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.status === 200) {
       console.log("User logged in");
-      return { success: true, message: data.message, user: data.user };
+
+      return response;
     } else {
       console.error("Error logging in user:", data.error);
       return { success: false, message: data.error };
     }
   } catch (error) {
     console.error("Error logging in user:", error);
-    return { success: false, message: "Error logging in user." };
+    return data;
+    /* return { success: false, message: "Error logging in user." } */
   }
 }
 
-export async function registerUser(formData) {
+export async function registerStuff(bringData) {
   try {
-    const { firstName, lastName, age, email, password } = formData;
-
-    const response = await fetch("http://localhost:4000/api/register", {
+    console.log(bringData);
+    const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ firstName, lastName, age, email, password }),
+      body: JSON.stringify(bringData),
     });
 
     const data = await response.json();
 
-    if (response.ok) {
-      console.log("User created successfully.");
+    if (response.status === 201) {
+      console.log("Travel route created successfully.");
       return { success: true, message: data.message };
-    } else {
-      console.error("Error registering user:", data.message);
-      return { success: false, message: data.message };
     }
+
+    return data;
   } catch (error) {
-    console.error("Error registering user:", error);
-    return { success: false, message: "Error registering user." };
+    console.error("Error bringing package:", error);
+    return { success: false, message: "Request to the server failed." };
   }
 }

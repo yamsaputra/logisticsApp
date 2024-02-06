@@ -9,3 +9,18 @@ export const getAccountData = async () => {
     throw error;
   }
 };
+
+
+export const getUserData = async (email) => {
+  try {
+    const response = await fetch(`http://localhost:4000/user?email=${encodeURIComponent(email)}`);
+    const data = await response.json();
+    console.log(data);
+    console.log(response);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+

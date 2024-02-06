@@ -12,6 +12,10 @@
   --overflow: hidden;
 }
 
+.error-message {
+  text-align: center;
+}
+
 ion-content {
   --offset-bottom: auto !important;
   --overflow: auto;
@@ -44,7 +48,7 @@ ion-content {
       <ion-grid>
         <ion-row>
           <ion-col size="12">
-            <ion-img src="/src/assets/logo/logoLabeled.png" alt="Logo"></ion-img>
+            <ion-img src="/src/assets/logo/logoTt.png" alt="Logo"></ion-img>
           </ion-col>
         </ion-row>
 
@@ -67,14 +71,14 @@ ion-content {
                 <ion-label class="inputLabel" position="floating">Password</ion-label>
                 <ion-input aria-placeholder="Password" type="password" v-model="password"></ion-input>
               </ion-item>
-                <ion-button expand="full" @click="login">Login</ion-button>
-                <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+              <ion-button expand="full" @click="login">Login</ion-button>
+              <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
             </ion-col>
 
 
             <ion-row>
               <ion-col size="12" class="ion-text-center">
-                <p>New to ConsignEase?</p>
+                <p>New to TrustTrip?</p>
                 <router-link to="/signup">
                   <ion-button expand="block">Sign-up!</ion-button>
                 </router-link>
@@ -95,8 +99,12 @@ import {
   IonHeader
 
 } from '@ionic/vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { loginUser } from '../services/postRequests.js';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+import { watch } from 'vue';
 
 export default {
   components: {
@@ -104,26 +112,51 @@ export default {
     IonHeader,
     IonGrid
   },
-  data() {
-    return {
-      email: '',
-      password: ''
-    };
-  },
-  methods: {
-    async login() {
+
+  setup() {
+    const email = ref('');
+    const password = ref('');
+    const errorMessage = ref(null);
+    const isLoginSuccess = ref(false);
+    const router = useRouter();
+    const store = useStore();
+    const userEmail = computed(() => store.state.user,email);
+
+    const login = async () => {
       try {
-        const response = await loginUser(this.email, this.password);
-        if (response.success) {
-          this.$router.push('/home');
+        const loginData = {
+          email: email.value,
+          password: password.value
+        };
+
+        if (!loginData.email || !loginData.password) {
+          errorMessage.value = 'Please fill in all fields.';
+          return;
+        }
+
+        const response = await loginUser(loginData);
+
+        console.log(response);
+        console.log(response.status);
+
+        if (response.status === 200) {
+          store.commit("setUserData", email.value)
+          isLoginSuccess.value = true;
+          router.push('/home');
         } else {
-          console.error('Failed to log in:', response.message);
+          console.error('Failed to log in:', response);
+          window.alert('Incorrect email or password. Please try again.');
         }
       } catch (error) {
         console.error('Error logging in:', error);
-        this.errorMessage = 'Failed to log in. Please try again later.';
       }
-    },
+    };
+
+    watch(userEmail, (newValue, oldValue) => {
+        console.log('User changed:', newValue);
+    });
+
+    return { email, password, errorMessage, login };
   },
-  };
+};
 </script>

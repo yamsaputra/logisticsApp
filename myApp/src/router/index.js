@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import tabs from '../components/ion-tabs.vue'
-import HomePage from '../views/HomePage.vue'
-import FlyerPage from '../views/FlyerPage.vue'
-import AboutPage from '../views/AboutPage.vue'
+import tabs from '../components/ion-tabs.vue';
+import HomePage from '../views/HomePage.vue';
+import TrustPage from '../views/TrustPage.vue';
 import AccountPage from '../views/AccountPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import SignupPage from '../views/SignupPage.vue';
+import MessagePage from '../views/messagePage.vue';
+import BringPage from '../views/bringPage.vue';
+import PackagePage from '../views/packagePage.vue';
 
 const routes = [
   {
@@ -26,6 +28,18 @@ const routes = [
     component: SignupPage
   },
   {
+    path: '/bring',
+    component: BringPage
+  },
+  {
+    path: '/account',
+    component: AccountPage
+  },
+  {
+    path: '/message',
+    component: MessagePage
+  },
+  {
     path: '/',
     component: tabs,
     children: [
@@ -39,16 +53,20 @@ const routes = [
         component: HomePage
       },
       {
-        path: '/fly',
-        component: FlyerPage
+        path: '/package',
+        component: PackagePage
+      },
+      {
+        path: '/trust',
+        component: TrustPage
+      },
+      {
+        path: '/message',
+        component: MessagePage
       },
       {
         path: '/account',
         component: AccountPage
-      },
-      {
-        path: '/about',
-        component: AboutPage
       }
     ]
   }
