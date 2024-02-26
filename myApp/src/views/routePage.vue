@@ -44,6 +44,7 @@
 
 <script>
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { IonHeader, IonButton, IonToolbar, IonTitle, IonContent, IonPage, IonDatetime } from '@ionic/vue';
 import { registerRoute } from '../services/postRequests.js';
 import { getUserData } from '../services/getRequests.js';
@@ -60,12 +61,15 @@ export default {
     IonDatetime
   },
   setup() {
+    const router = useRouter();
     const depart = ref('');
     const target = ref('');
     const selectedDate = ref(new Date().toISOString());
     const price = ref('');
     const description = ref('');
     const dateObject = new Date();
+    const userID = ref(null);
+    const userEmail = ref(null);
 
     console.log('bringPageDate:', selectedDate.value);
 
@@ -73,9 +77,10 @@ export default {
 
     onMounted(() => {
       try {
-        const userEmail = store.state.user;
-        console.log("bringPageUser:", userEmail);
-
+        userEmail.value = store.state.user.email;
+        console.log("bringPageUser:", userEmail.value);
+        userID.value = store.state.user.ID;
+        console.log("bringPageUserID:", userID.value);
       } catch (error) {
         console.error(error);
       }
@@ -83,6 +88,11 @@ export default {
 
     const bringStuff = async () => {
       try {
+
+        if (!userID.value) {
+          window.alert("Please log in to submit a route.");
+          return;
+        }
 
         console.log('Form Submit Time:', selectedDate.value);
 
@@ -123,12 +133,12 @@ export default {
           return;
         }
 
-        const response = await registerRoute(bringData);
+        const response = await registerRoute(bringData, userID.value);
 
         if (response.success) {
           console.log('Success:', response);
           window.alert('Your offer has been submitted.');
-          router.push('/');
+          router.push('/home');
         } else {
           console.error('Failed to submit offer:', response);
           window.alert('Failed to submit offer. Please try again.');

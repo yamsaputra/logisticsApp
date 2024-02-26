@@ -38,7 +38,7 @@ const routes = [
     component: mapPage
   },
   {
-    path: '/list/:query',
+    path: '/list',
     name: 'listPage',
     component: listPage
   },

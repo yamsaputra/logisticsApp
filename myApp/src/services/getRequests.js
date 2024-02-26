@@ -37,3 +37,15 @@ export const getRouteData = async (query) => {
   }
 }
 
+export const getRouteArray = async (query) => {
+  try {
+    const response = await fetch(`http://localhost:4000/routes?query=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error('getRequest error:', error);
+    throw error;
+  }
+}

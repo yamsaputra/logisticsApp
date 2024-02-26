@@ -101,6 +101,10 @@ const Book = sequelize.define("user_has_ride", {
     type: Sequelize.INTEGER,
     primaryKey: true,
   },
+  is_sender: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
 });
 
 // Sync the model with the database
@@ -114,10 +118,18 @@ User.sync({ alter: true })
 
 Ride.sync({ alter: true })
   .then(() => {
-    console.log("Rides model synchronized with the database.");
+    console.log("Ride model synchronized with the database.");
   })
   .catch((error) => {
     console.error("Error synchronizing Rides model:", error);
+  });
+
+Book.sync({ alter: true })
+  .then(() => {
+    console.log("Book model synchronized with the database.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing Book model:", error);
   });
 
   User.belongsToMany(Ride, { through: Book, foreignKey: 'user_id' });
@@ -174,12 +186,15 @@ async function registerRouteDB(bringDataBE) {
       price: bringDataDB.price,
       description: bringDataDB.description,
     });
+
     console.log("Ride created successfully. Yeyuh!", newRide);
-    return true;
+    /* return true; */
+    const newRideID = newRide.dataValues.ride_id;
+    return newRideID;
   } catch (error) {
     console.error("Error creating ride:", error);
     return false;
   }
 }
 
-export { register, User, Ride, registerRouteDB};
+export { User, Ride, Book, register, registerRouteDB };

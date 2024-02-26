@@ -72,8 +72,10 @@ export default {
     // Fetch account data on component mount
     onMounted(async () => {
       try {
-        const userEmail = store.state.user;
+        const userEmail = store.state.user.email;
         console.log("accountPageUser:", userEmail);
+        const userID = store.state.user.ID;
+        console.log("accountPageUser:", userID);
 
         let data = await getUserData(userEmail);
 

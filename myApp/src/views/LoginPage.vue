@@ -145,7 +145,8 @@ export default {
     const errorMessage = ref(null);
     const isLoginSuccess = ref(false);
     const router = useRouter();
-    const userEmail = computed(() => store.state.user, email);
+    const userEmail = computed(() => store.state.user.email);
+    const userID = computed(() => store.state.user.ID);
 
     const login = async () => {
       try {
@@ -159,13 +160,17 @@ export default {
           return;
         }
 
-        const response = await loginUser(loginData);
+        const userData = await loginUser(loginData);
 
-        console.log(response);
-        console.log(response.status);
+        const response = userData[0];
+        const data = userData[1];
+
+
+        console.log("loginPage response:", response);
+        console.log("loginPage data:", data)
 
         if (response.status === 200) {
-          store.commit("setUserData", email.value)
+          store.commit("setUserData", { email: email.value, ID: data.user.user_id });
           isLoginSuccess.value = true;
           router.push('/home');
         } else {
@@ -177,8 +182,12 @@ export default {
       }
     };
 
-    watch(userEmail, (newValue, oldValue) => {
+    watch(userEmail, (newValue) => {
       console.log('User changed:', newValue);
+    });
+
+    watch(userID, (newValue) => {
+      console.log('User ID changed:', newValue);
     });
 
     const changeLocale = (locale) => {

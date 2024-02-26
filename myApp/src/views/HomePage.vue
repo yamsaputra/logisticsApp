@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 10%;
 }
 
 .centered-searchbar {
@@ -12,6 +12,15 @@
   align-items: center;
   margin-top: 20px;
   color: black;
+}
+
+.description {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150%;
+  color: black;
+
 }
 </style>
 
@@ -22,6 +31,20 @@
         <ion-title>TrustTrip</ion-title>
       </ion-toolbar>
     </ion-header>
+
+    <ion-content>
+      <div class="description">
+        <ion-card color="light">
+          <ion-card-header>
+            <ion-card-title>Sending a package?</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Search available routes based on origin & target location</p>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-content>
+
     <ion-content>
       <div class="example-content">
         <IonSearchbar animated="true" placeholder="Search for a destination" class="centered-searchbar"
@@ -42,7 +65,10 @@ import {
   IonDatetime,
   IonDatetimeButton, // Add this line
 } from '@ionic/vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { getRouteData } from '../services/getRequests.js';
+import store from '../store.js';
 
 
 export default {
@@ -54,28 +80,35 @@ export default {
     IonPage,
     IonSearchbar,
     IonDatetime,
-    IonDatetimeButton, // Add this line
+    IonDatetimeButton,
   },
 
-  data() {
-    return {
-      searchQuery: '',
-    };
-  },
+  setup() {
+    const searchQuery = ref('');
+    const router = useRouter();
 
-  methods: {
-    async search() {
+    onMounted(async () => {
       try {
-        const response = await getRouteData(this.searchQuery);
-        console.log(this.searchQuery)
+        const userEmail = store.state.user.email;
+        console.log("homePageUser:", userEmail);
+        const userID = store.state.user.ID;
+        console.log("homePageUserID:", userID);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    });
 
-        const searchQuery = encodeURIComponent(this.searchQuery);
+    const search = async () => {
+      try {
+        const encodedSearchQuery = encodeURIComponent(searchQuery.value);
+
+        const response = await getRouteData(encodedSearchQuery);
 
         if (response.message === "Route found.") {
           // Proceed with navigation if routes are found
-          this.$router.push({
+          router.push({
             name: 'listPage',
-            query: { searchQuery }
+            query: { searchQuery: encodedSearchQuery }
           });
         } else {
           throw new Error('No available routes. Please search another target.');
@@ -83,7 +116,11 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
+    };
+
+    return { searchQuery, search };
   },
+
+
 };
 </script>
