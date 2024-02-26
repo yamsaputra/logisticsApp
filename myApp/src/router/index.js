@@ -5,9 +5,9 @@ import TrustPage from '../views/TrustPage.vue';
 import AccountPage from '../views/AccountPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import SignupPage from '../views/SignupPage.vue';
-import MessagePage from '../views/messagePage.vue';
-import BringPage from '../views/bringPage.vue';
-import PackagePage from '../views/packagePage.vue';
+import MessagePage from '../views/MessagePage.vue';
+import BringPage from '../views/BringPage.vue';
+import PackagePage from '../views/PackagePage.vue';
 
 const routes = [
   {
