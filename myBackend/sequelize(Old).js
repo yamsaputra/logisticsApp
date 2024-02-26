@@ -1,34 +1,20 @@
 import Sequelize from "sequelize";
 
 // Set up a new database connection
-const sequelize = new Sequelize("sql11681953", "sql11681953", "TGyZWQrZ2R", {
-  host: "sql11.freemysqlhosting.net",
-  port: "3306",
+const sequelize = new Sequelize("flyer_db", "Yama", "Redcharmander98", {
+  host: "localhost",
   dialect: "mysql",
-  dialectOptions: {
-    connectTimeout: 60000,
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
 });
 
 // Define the user model
 const User = sequelize.define(
-  "users",
+  "User",
   {
-    user_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-    },
-    fname: {
+    firstName: {
       type: Sequelize.STRING(45), // VARCHAR(45)
       allowNull: false,
     },
-    lname: {
+    lastName: {
       type: Sequelize.STRING(45), // VARCHAR(45)
       allowNull: false,
     },
@@ -43,39 +29,6 @@ const User = sequelize.define(
     },
     password: {
       type: Sequelize.STRING(60), // VARCHAR(45)
-      allowNull: false,
-    },
-    rating: {
-      type: Sequelize.DOUBLE,
-      allowNull: true,
-    },
-  },
-  {
-    timestamps: false,
-  }
-);
-
-const Rides = sequelize.define(
-  "rides",
-  {
-    ride_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-    },
-    origin: {
-      type: Sequelize.STRING(45),
-      allowNull: false,
-    },
-    destination: {
-      type: Sequelize.STRING(45),
-      allowNull: false,
-    },
-    date: {
-      type: Sequelize.DATE,
-      allowNull: false,
-    },
-    time: {
-      type: Sequelize.TIME,
       allowNull: false,
     },
   },
@@ -93,20 +46,12 @@ User.sync({ alter: true })
     console.error("Error synchronizing User model:", error);
   });
 
-Rides.sync({ alter: true })
-  .then(() => {
-    console.log("Rides model synchronized with the database.");
-  })
-  .catch((error) => {
-    console.error("Error synchronizing Rides model:", error);
-  });
-
 // Create a new user
-async function register(fname, lname, age, email, hashedPassword) {
+async function register(firstName, lastName, age, email, hashedPassword) {
   try {
     const newUser = await User.create({
-      fname,
-      lname,
+      firstName,
+      lastName,
       age,
       email,
       password: hashedPassword,
@@ -131,22 +76,3 @@ async function register(fname, lname, age, email, hashedPassword) {
   }
 }
 export { register, User };
-
-// Create a new ride
-async function registerStuffDB(origin, destination, date, time) {
-  try {
-    const newRide = await Rides.create({
-      origin,
-      destination,
-      date,
-      time,
-    });
-    console.log("Ride created successfully. Yeyuh!", newRide);
-    return true;
-  } catch (error) {
-    console.error("Error creating ride:", error);
-    return false;
-  }
-}
-
-

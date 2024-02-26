@@ -55,9 +55,9 @@ export async function loginUser(loginData) {
   }
 }
 
-export async function registerStuff(bringData) {
+export async function registerRoute(bringData) {
   try {
-    console.log(bringData);
+    console.log("bringDataPR:", bringData);
     const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
       headers: {

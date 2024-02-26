@@ -4,8 +4,6 @@
   height: 200px;
   object-fit: scale-down;
 }
-
-/* Your existing styles */
 </style>
 
 <template>
@@ -18,8 +16,6 @@
 
     <ion-content>
       <ion-card>
-        <!-- <img v-if="account && account.gender === 'Male'" alt="male profile" src="../assets/male.jpg" class="img" />
-        <img v-else-if="account && account.gender === 'Female'" alt="female profile" src="../assets/female.jpg" class="img" /> -->
         <img src="../assets/default.png" class="img" />
         <ion-card-header>
 <!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
@@ -58,7 +54,7 @@ import {
   IonTabBar
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex'; // Replace with your store
+import store from '../store.js';
 import { getUserData } from '../services/getRequests.js'; // Replace with your account service
 
 export default {
@@ -76,13 +72,10 @@ export default {
     // Fetch account data on component mount
     onMounted(async () => {
       try {
-        // Simulate fetching account data from the backend
-        const store = useStore();
-        console.log(store.state.user);
         const userEmail = store.state.user;
-        console.log(userEmail);
+        console.log("accountPageUser:", userEmail);
 
-        let data = await getUserData(userEmail); // Replace with your backend URL
+        let data = await getUserData(userEmail);
 
         fname.value = data.user.fname;
         lname.value = data.user.lname;

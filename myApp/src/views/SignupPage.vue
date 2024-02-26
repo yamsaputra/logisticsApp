@@ -10,43 +10,53 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title v-if="!isSignUpSuccess">Sign-up for TrustTrip</ion-title>
-        <ion-title v-else>Thank you for trusting us!</ion-title>
+        <ion-title v-if="!isSignUpSuccess">{{ $t('greeting') }}</ion-title>
+        <ion-title v-else>{{ $t('welcome') }}</ion-title>
       </ion-toolbar>
     </ion-header>
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
     <ion-content class="ion-padding">
       <form>
         <ion-card>
           <ion-list>
-            <ion-item>
-              <ion-label class="inputLabel" position="floating">First Name</ion-label>
-              <ion-input aria-placeholder="Name" type="text" v-model="firstName"></ion-input>
+            <ion-item>              
+              <ion-input :label="$t('firstName')" labelPlacement="floating" v-model="firstName" @keydown.enter="signUp"></ion-input> <!-- placeholder="enter text" for adding disappearing text -->
             </ion-item>
             <ion-item>
-              <ion-label class="inputLabel" position="floating">Last Name</ion-label>
-              <ion-input aria-placeholder="lastName" type="text" v-model="lastName"></ion-input>
+              <ion-input :label="$t('lastName')" labelPlacement="floating" v-model="lastName" @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label class="inputLabel" position="floating">Age</ion-label>
-              <ion-input aria-placeholder="Age" type="number" v-model="age"></ion-input>
+              <ion-input :label="$t('age')" labelPlacement="floating" v-model="age" @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label class="inputLabel" position="floating">E-mail</ion-label>
-              <ion-input aria-placeholder="Email" type="email" v-model="email"></ion-input>
+              <ion-input :label="$t('email')" labelPlacement="floating" v-model="email" @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label class="inputLabel" position="floating">Password</ion-label>
-              <ion-input aria-placeholder="Password" type="password" v-model="password"></ion-input>
+              <ion-input :label="$t('password')" labelPlacement="floating" type="password" v-model="password" @keydown.enter="signUp"></ion-input>
             </ion-item>
-            <ion-item>
-              <ion-label class="inputLabel" position="floating">Re-enter Password</ion-label>
-              <ion-input aria-placeholder="Password" type="password" v-model="reenterPassword"></ion-input>
+            <ion-item>            
+              <ion-input :label="$t('confirmPassword')" labelPlacement="floating" type="password" v-model="reenterPassword" @keydown.enter="signUp"></ion-input>
             </ion-item>
           </ion-list>
-          <ion-button v-if="!isSignUpSuccess" expand="full" @click="signUp">Sign Up</ion-button>
+          <ion-button v-if="!isSignUpSuccess" expand="full" @click="signUp">{{ $t('signUp') }}</ion-button>
           <router-link v-if="isSignUpSuccess" to="/login">
-            <ion-button expand="full">Continue to Login</ion-button>
+            <ion-button expand="full">{{ $t('login') }}</ion-button>
           </router-link>
         </ion-card>
       </form>
@@ -56,8 +66,10 @@
 
 <script>
 import { IonButton, IonHeader } from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { ref } from 'vue';
 import { registerUser } from '../services/postRequests.js';
+import store from '../store.js';
 
 export default {
   components: {
@@ -143,6 +155,10 @@ export default {
       }
     };
 
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
     return {
       firstName,
       lastName,
@@ -152,7 +168,9 @@ export default {
       reenterPassword,
       isSignUpSuccess,
       errorMessage,
-      signUp
+      signUp,
+      changeLocale,
+      globe
     };
   },
 };

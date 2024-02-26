@@ -4,17 +4,30 @@ import Sequelize from "sequelize";
 const sequelize = new Sequelize("flyer_db", "Yama", "Redcharmander98", {
   host: "localhost",
   dialect: "mysql",
+  dialectOptions: {
+    connectTimeout: 60000,
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
 });
 
 // Define the user model
 const User = sequelize.define(
-  "User",
+  "users",
   {
-    firstName: {
+    user_id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+    },
+    fname: {
       type: Sequelize.STRING(45), // VARCHAR(45)
       allowNull: false,
     },
-    lastName: {
+    lname: {
       type: Sequelize.STRING(45), // VARCHAR(45)
       allowNull: false,
     },
@@ -31,11 +44,64 @@ const User = sequelize.define(
       type: Sequelize.STRING(60), // VARCHAR(45)
       allowNull: false,
     },
+    rating: {
+      type: Sequelize.DOUBLE,
+      allowNull: true,
+    },
   },
   {
     timestamps: false,
   }
 );
+
+const Ride = sequelize.define(
+  "rides",
+  {
+    ride_id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    origin: {
+      type: Sequelize.STRING(45),
+      allowNull: false,
+    },
+    destination: {
+      type: Sequelize.STRING(45),
+      allowNull: false,
+    },
+    date: {
+      type: Sequelize.DATEONLY,
+      allowNull: false,
+    },
+    time: {
+      type: Sequelize.TIME,
+      allowNull: false,
+    },
+    price: {
+      type: Sequelize.DOUBLE,
+      allowNull: false,
+    },
+    description: {
+      type: Sequelize.STRING(100),
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+const Book = sequelize.define("user_has_ride", {
+  user_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
+  ride_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
+});
 
 // Sync the model with the database
 User.sync({ alter: true })
@@ -46,12 +112,23 @@ User.sync({ alter: true })
     console.error("Error synchronizing User model:", error);
   });
 
+Ride.sync({ alter: true })
+  .then(() => {
+    console.log("Rides model synchronized with the database.");
+  })
+  .catch((error) => {
+    console.error("Error synchronizing Rides model:", error);
+  });
+
+  User.belongsToMany(Ride, { through: Book, foreignKey: 'user_id' });
+  Ride.belongsToMany(User, { through: Book, foreignKey: 'ride_id' });
+
 // Create a new user
-async function register(firstName, lastName, age, email, hashedPassword) {
+async function register(fname, lname, age, email, hashedPassword) {
   try {
     const newUser = await User.create({
-      firstName,
-      lastName,
+      fname,
+      lname,
       age,
       email,
       password: hashedPassword,
@@ -75,4 +152,34 @@ async function register(firstName, lastName, age, email, hashedPassword) {
     }
   }
 }
-export { register, User };
+
+// Create a new ride
+async function registerRouteDB(bringDataBE) {
+  try {
+
+    const bringDataDB = {
+      origin: bringDataBE.origin,
+      destination: bringDataBE.destination,
+      date: new Date(bringDataBE.date),
+      time: bringDataBE.time,
+      price: parseFloat(bringDataBE.price),
+      description: bringDataBE.description,
+    };
+
+    const newRide = await Ride.create({
+      origin: bringDataDB.origin,
+      destination: bringDataDB.destination,
+      date: bringDataDB.date,
+      time: bringDataDB.time,
+      price: bringDataDB.price,
+      description: bringDataDB.description,
+    });
+    console.log("Ride created successfully. Yeyuh!", newRide);
+    return true;
+  } catch (error) {
+    console.error("Error creating ride:", error);
+    return false;
+  }
+}
+
+export { register, User, Ride, registerRouteDB};

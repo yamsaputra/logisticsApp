@@ -1,10 +1,10 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { register, User } from "./sequelize1.js";
+import { register, User, registerRouteDB } from "./sequelize.js";
 
 export let loginUser = express.Router();
 export let registerUser = express.Router();
-export let registerStuff = express.Router();
+export let registerRouteBE = express.Router();
 
 registerUser = async (req, res) => {
   try {
@@ -60,19 +60,30 @@ loginUser = async (req, res) => {
   }
 };
 
-registerStuff = async (req, res) => {
+registerRouteBE = async (req, res) => {
   try {
-    console.log(req.body);
-    const { depart, target, selectedDate } = req.body;
+    console.log("bringDataBodyBE:", req.body);
+    const bringDataBE = req.body;
+
+    const bringDataDB = {
+      origin: bringDataBE.origin,
+      destination: bringDataBE.destination,
+      date: new Date(bringDataBE.date),
+      time: bringDataBE.time,
+      price: parseFloat(bringDataBE.price),
+      description: bringDataBE.description,
+    }
+
+    /* const { origin , destination, date, time, price, description } = bringDataBE; */
   
 
-    /* const stored = await registerStuffDB(depart, target, selectedDate); */
+    const stored = await registerRouteDB(bringDataBE);
 
     if (stored) {
       return res.status(201).json({ success: true, message: "Stuff registered." });
     }
   } catch (error) {
-    console.error("Error registering stuff", error);
+    console.error("Error registering route", error);
     return res.status(500).json({ success: false, error: "Error registering stuff." });
   }
 };
