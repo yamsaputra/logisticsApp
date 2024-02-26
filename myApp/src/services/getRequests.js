@@ -24,3 +24,28 @@ export const getUserData = async (email) => {
   }
 }
 
+export const getRouteData = async (query) => {
+  try {
+    const response = await fetch(`http://localhost:4000/route?query=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    console.log(data);
+    console.log(response);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+export const getRouteArray = async (query) => {
+  try {
+    const response = await fetch(`http://localhost:4000/routes?query=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error('getRequest error:', error);
+    throw error;
+  }
+}

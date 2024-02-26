@@ -1,10 +1,10 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { register, User } from "./sequelize1.js";
+import { register, User, registerRouteDB, Book } from "./sequelize.js";
 
 export let loginUser = express.Router();
 export let registerUser = express.Router();
-export let registerStuff = express.Router();
+export let registerRouteBE = express.Router();
 
 registerUser = async (req, res) => {
   try {
@@ -12,7 +12,7 @@ registerUser = async (req, res) => {
 
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      console.log("lolyeyuh", existingUser)
+      console.log("lolyeyuh", existingUser);
       return res
         .status(400)
         .json({ success: false, message: "User already exists." });
@@ -21,10 +21,16 @@ registerUser = async (req, res) => {
     // Hashes the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const success = await register(firstName, lastName, age, email, hashedPassword);
+    const success = await register(
+      firstName,
+      lastName,
+      age,
+      email,
+      hashedPassword
+    );
 
     if (success) {
-    return res.status(201).json({ success: true, message: "User created." });
+      return res.status(201).json({ success: true, message: "User created." });
     }
   } catch (error) {
     console.error("Error creating user", error);
@@ -52,27 +58,39 @@ loginUser = async (req, res) => {
     if (isPasswordValid && user) {
       console.log("User logged in", user);
       // code for storing user in session goes here
-    return res.status(200).json({ message: "Login successful.", user });
-  }
+      return res.status(200).json({ message: "Login successful.", user });
+    }
   } catch (error) {
     console.error("Error logging in user", error);
     return res.status(500).json({ error: "Error logging in user." });
   }
 };
 
-registerStuff = async (req, res) => {
+registerRouteBE = async (req, res) => {
   try {
-    console.log(req.body);
-    const { depart, target, selectedDate } = req.body;
-  
+    console.log("bringDataBodyBE:", req.body);
+    const { user_id, ...bringDataBE } = req.body;
+    console.log("bringDataBE:", bringDataBE);
+    console.log("userID:", user_id);
 
-    /* const stored = await registerStuffDB(depart, target, selectedDate); */
+    const newRideID = await registerRouteDB(bringDataBE);
 
-    if (stored) {
-      return res.status(201).json({ success: true, message: "Stuff registered." });
+    console.log("newRide ID:", newRideID);
+
+    if (newRideID) {
+      await Book.create({
+        user_id: user_id,
+        ride_id: newRideID,
+        is_sender: true,
+      });
+      return res
+        .status(201)
+        .json({ success: true, message: "Route registered." });
     }
   } catch (error) {
-    console.error("Error registering stuff", error);
-    return res.status(500).json({ success: false, error: "Error registering stuff." });
+    console.error("Error registering route", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error registering route." });
   }
 };

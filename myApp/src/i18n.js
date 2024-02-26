@@ -1,20 +1,35 @@
-import Vue from 'vue';
-import Vuei18n from 'vue-i18n';
-import en from './locales/en.json';
-import de from './locales/de.json';
-import id from './locales/id.json';
-
-Vue.useAttrs(Vuei18n);
+import { createI18n } from 'vue-i18n';
+import loginPage from './locales/loginPage.js';
+import signupPage from './locales/signupPage.js';
+import trustPage from './locales/trustPage.js';
+import store from './store';
 
 const messages = {
-    en,
-    de,
-    id
+    en : {
+        ...loginPage.en,
+        ...signupPage.en,
+        ...trustPage.en
+    },
+    de : {
+    ...loginPage.de,
+    ...signupPage.de,
+    ...trustPage.de
+    },
+    id : {
+    ...loginPage.id,
+    ...signupPage.id,
+    ...trustPage.id
+    }
 };
 
-const i18n = new Vuei18n({
+export const i18n = new createI18n({
     locale: 'en', //default language
     messages
 });
 
-export default i18n;
+store.watch(
+    (state) => state.locale,
+    (locale) => {
+        i18n.global.locale = locale;
+    }
+);

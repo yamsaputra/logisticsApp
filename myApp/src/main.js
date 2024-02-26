@@ -1,8 +1,8 @@
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import App from './App.vue'
 import router from './router';
 import store from './store';
-import { createI18n } from 'vue-i18n'	//vue-i18n
+import { i18n } from './i18n.js'	//vue-i18n
 
 import { IonicVue, 
   IonPage,
@@ -69,9 +69,6 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-/* i18n */
-import i18n from './i18n';
-
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
@@ -122,9 +119,6 @@ app.component('IonCheckbox', IonCheckbox);
 app.component('IonChip', IonChip);
 app.component('IonImg', IonImg);
 
-app.use(store);
-
-  
 router.isReady().then(() => {
   app.mount('#app');
 });

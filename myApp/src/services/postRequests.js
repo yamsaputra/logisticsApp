@@ -38,12 +38,16 @@ export async function loginUser(loginData) {
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log("pR - loginResponseData:", data);
+
+    const userData = [response, data]
+      console.log("pR userData:", userData.data);
+
 
     if (response.status === 200) {
       console.log("User logged in");
 
-      return response;
+      return userData;
     } else {
       console.error("Error logging in user:", data.error);
       return { success: false, message: data.error };
@@ -55,15 +59,22 @@ export async function loginUser(loginData) {
   }
 }
 
-export async function registerStuff(bringData) {
+export async function registerRoute(bringData, userID) {
   try {
-    console.log(bringData);
+    console.log("userIDPR:", userID);
+    console.log("bringDataPR:", bringData);
+    const requestData = {
+      ...bringData,
+      user_id: userID,
+    };
+
+
     const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(bringData),
+      body: JSON.stringify(requestData),
     });
 
     const data = await response.json();

@@ -40,15 +40,31 @@ ion-content {
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Glad to see you here!</ion-title>
+        <ion-title>{{ $t('loginTitle') }}</ion-title>
       </ion-toolbar>
     </ion-header>
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col size="12">
-            <ion-img src="/src/assets/logo/logoTt.png" alt="Logo"></ion-img>
+          <ion-col size="10" class="ion-text-center">
+            <!--    <ion-img src="/src/assets/logo/logoTt.png" alt="Logo" class="logo"></ion-img> -->
           </ion-col>
         </ion-row>
 
@@ -63,14 +79,14 @@ ion-content {
             <ion-col>
 
               <ion-item>
-                <ion-label class="inputLabel" position="floating">E-mail</ion-label>
-                <ion-input aria-placeholder="Email" type="email" v-model="email"></ion-input>
+                <ion-input :label="$t('email')" labelPlacement="floating" v-model="email"></ion-input>
               </ion-item>
 
               <ion-item>
-                <ion-label class="inputLabel" position="floating">Password</ion-label>
-                <ion-input aria-placeholder="Password" type="password" v-model="password"></ion-input>
+                <ion-input :label="$t('password')" labelPlacement="floating" type="password" v-model="password"
+                  @keydown.enter="login"></ion-input>
               </ion-item>
+
               <ion-button expand="full" @click="login">Login</ion-button>
               <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
             </ion-col>
@@ -78,9 +94,9 @@ ion-content {
 
             <ion-row>
               <ion-col size="12" class="ion-text-center">
-                <p>New to TrustTrip?</p>
+                <p aria-label="newHere">{{ $t('newHere') }}</p>
                 <router-link to="/signup">
-                  <ion-button expand="block">Sign-up!</ion-button>
+                  <ion-button expand="block">{{ $t('signUp') }}</ion-button>
                 </router-link>
               </ion-col>
             </ion-row>
@@ -94,23 +110,33 @@ ion-content {
 
 <script>
 import {
+  IonContent,
+  IonFab,
+  IonFabButton,
   IonButton,
+  IonFabList,
   IonGrid,
-  IonHeader
-
+  IonHeader,
+  IonToolbar,
 } from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { loginUser } from '../services/postRequests.js';
-import { useStore } from 'vuex';
 import { computed } from 'vue';
 import { watch } from 'vue';
+import store from '../store.js';
 
 export default {
   components: {
     IonButton,
     IonHeader,
-    IonGrid
+    IonGrid,
+    IonFab,
+    IonFabButton,
+    IonFabList,
+    IonToolbar,
+    IonContent,
   },
 
   setup() {
@@ -119,8 +145,8 @@ export default {
     const errorMessage = ref(null);
     const isLoginSuccess = ref(false);
     const router = useRouter();
-    const store = useStore();
-    const userEmail = computed(() => store.state.user,email);
+    const userEmail = computed(() => store.state.user.email);
+    const userID = computed(() => store.state.user.ID);
 
     const login = async () => {
       try {
@@ -134,13 +160,17 @@ export default {
           return;
         }
 
-        const response = await loginUser(loginData);
+        const userData = await loginUser(loginData);
 
-        console.log(response);
-        console.log(response.status);
+        const response = userData[0];
+        const data = userData[1];
+
+
+        console.log("loginPage response:", response);
+        console.log("loginPage data:", data)
 
         if (response.status === 200) {
-          store.commit("setUserData", email.value)
+          store.commit("setUserData", { email: email.value, ID: data.user.user_id });
           isLoginSuccess.value = true;
           router.push('/home');
         } else {
@@ -152,11 +182,26 @@ export default {
       }
     };
 
-    watch(userEmail, (newValue, oldValue) => {
-        console.log('User changed:', newValue);
+    watch(userEmail, (newValue) => {
+      console.log('User changed:', newValue);
     });
 
-    return { email, password, errorMessage, login };
+    watch(userID, (newValue) => {
+      console.log('User ID changed:', newValue);
+    });
+
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return {
+      email,
+      password,
+      errorMessage,
+      login,
+      changeLocale,
+      globe
+    };
   },
 };
 </script>

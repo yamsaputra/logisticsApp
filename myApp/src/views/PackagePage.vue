@@ -31,9 +31,41 @@
 </template>
 
 <script>
-  import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonTabs } from '@ionic/vue';
+  import { 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent, 
+    IonPage, 
+    IonTabs 
+  } from '@ionic/vue';
+  import { onMounted, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import store from '../store.js';
 
   export default {
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonTabs },
+    components: { 
+      IonHeader, 
+      IonToolbar, 
+      IonTitle,
+      IonContent, 
+      IonPage, 
+      IonTabs 
+    },
+
+    setup() {
+      const router = useRouter();
+
+      onMounted(async () => {
+        try {
+          const userEmail = store.state.user.email;
+          console.log("packagePageUserEmail:", userEmail);
+          const userID = store.state.user.ID;
+          console.log("packagePageUserID:", userID);
+        } catch (error) {
+          console.error(error);
+        }
+      })
+    }
   };
 </script>

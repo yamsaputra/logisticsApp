@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import tabs from '../components/ion-tabs.vue';
-import HomePage from '../views/HomePage.vue';
-import TrustPage from '../views/TrustPage.vue';
-import AccountPage from '../views/AccountPage.vue';
-import LoginPage from '../views/LoginPage.vue';
-import SignupPage from '../views/SignupPage.vue';
-import MessagePage from '../views/MessagePage.vue';
-import BringPage from '../views/BringPage.vue';
-import PackagePage from '../views/PackagePage.vue';
+import homePage from '../views/homePage.vue';
+import trustPage from '../views/trustPage.vue';
+import accountPage from '../views/accountPage.vue';
+import loginPage from '../views/loginPage.vue';
+import signupPage from '../views/signupPage.vue';
+import messagePage from '../views/messagePage.vue';
+import routePage from '../views/routePage.vue';
+import packagePage from '../views/packagePage.vue';
+import mapPage from '../views/mapPage.vue';
+import listPage from '../views/listPage.vue';
 
 const routes = [
   {
@@ -17,27 +19,28 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: HomePage
+    component: homePage
   },
   {
     path: '/login',
-    component: LoginPage
+    component: loginPage
   },
   {
     path: '/signup',
-    component: SignupPage
+    component: signupPage
   },
   {
-    path: '/bring',
-    component: BringPage
+    path: '/route',
+    component: routePage
   },
   {
-    path: '/account',
-    component: AccountPage
+    path: '/map',
+    component: mapPage
   },
   {
-    path: '/message',
-    component: MessagePage
+    path: '/list',
+    name: 'listPage',
+    component: listPage
   },
   {
     path: '/',
@@ -50,23 +53,23 @@ const routes = [
       },
       {
         path: '/home',
-        component: HomePage
+        component: homePage
       },
       {
         path: '/package',
-        component: PackagePage
+        component: packagePage
       },
       {
         path: '/trust',
-        component: TrustPage
+        component: trustPage
       },
       {
         path: '/message',
-        component: MessagePage
+        component: messagePage
       },
       {
         path: '/account',
-        component: AccountPage
+        component: accountPage
       }
     ]
   }
