@@ -90,3 +90,34 @@ export async function registerRoute(bringData, userID) {
     return { success: false, message: "Request to the server failed." };
   }
 }
+
+export async function bookRoute(rideID, userID) {
+  try {
+    console.log("rideIDPR:", rideID);
+    console.log("userIDPR:", userID);
+    const requestData = {
+      user_id: userID,
+      ride_id: rideID,
+    };
+
+    const response = await fetch("http://localhost:4000/book", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    const data = await response.json();
+
+    if (response.status === 201) {
+      console.log("Route booked successfully.");
+      return { success: true, message: data.message };
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error booking route:", error);
+    return { success: false, message: "Request to the server failed." };
+  }
+}

@@ -1,10 +1,11 @@
 import express from "express";
 import { Op } from "sequelize";
-import { User, Ride } from "./sequelize.js";
+import { User, Ride, Book } from "./sequelize.js";
 
 export let getUser = express.Router();
 export let getRoute = express.Router();
 export let getRoutes = express.Router();
+export let getUserRoutes = express.Router();
 
 getUser = async (req, res) => {
     try {
@@ -54,7 +55,8 @@ getRoutes = async (req, res) => {
                     { origin: { [Op.like]: `%${query}%` } },
                     { destination: { [Op.like]: `%${query}%` } }
                 ]
-            } 
+            },
+            attributes: ['ride_id', 'origin', 'destination', 'date', 'time', 'price', 'description', 'email'] 
         });
 
         if (!routes || routes.length === 0) {
@@ -65,5 +67,25 @@ getRoutes = async (req, res) => {
     } catch (error) {
         console.error("Error fetching routes", error);
         return res.status(500).json({ error: "Error fetching routes." });
+    }
+};
+
+getUserRoutes = async (req, res) => {
+    try {
+        const { userID } = req.query;
+
+        const userRoutes = await Book.findAll({
+            where: { user_id: userID },
+            include: { model: Ride }
+        });
+
+        if (!userRoutes || userRoutes.length === 0) {
+            return res.status(404).json({ error: "User routes not found." });
+        }
+
+        res.status(200).json({ message: 'User routes found.', userRoutes });
+    } catch (error) {
+        console.error("Error fetching user routes", error);
+        return res.status(500).json({ error: "Error fetching user routes." });
     }
 };

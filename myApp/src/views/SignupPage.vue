@@ -10,6 +10,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
         <ion-title v-if="!isSignUpSuccess">{{ $t('greeting') }}</ion-title>
         <ion-title v-else>{{ $t('welcome') }}</ion-title>
       </ion-toolbar>

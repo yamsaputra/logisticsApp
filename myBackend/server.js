@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors"; // Cross Origin Resource Sharing, to allow requests from other domains and allow the front and backend to be on the same domain.
-import { getUser, getRoute, getRoutes } from "./getRequestsBE.js";
-import { registerUser, loginUser, registerRouteBE } from "./postRequestsBE.js";
+import { getUser, getRoute, getRoutes, getUserRoutes } from "./getRequestsBE.js";
+import { registerUser, loginUser, registerRouteBE, bookRouteBE } from "./postRequestsBE.js";
+import { deleteRouteBE } from "./deleteRequestsBE.js";
 
 const app = express();
 const PORT = 4000;
@@ -22,11 +23,17 @@ app.get('/route', getRoute);
 
 app.get('/routes', getRoutes);
 
+app.get('/userroutes', getUserRoutes);
+
 app.post('/register', registerUser);
 
 app.post("/login", loginUser);
 
 app.post("/bring", registerRouteBE);
+
+app.post("/book", bookRouteBE);
+
+app.delete("/deleteroute", deleteRouteBE);
 
 
 /* app.get('/person', (req, res) => {

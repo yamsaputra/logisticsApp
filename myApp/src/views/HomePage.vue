@@ -111,6 +111,7 @@ export default {
             query: { searchQuery: encodedSearchQuery }
           });
         } else {
+          window.alert('No available routes. Please search another target.');
           throw new Error('No available routes. Please search another target.');
         }
       } catch (error) {

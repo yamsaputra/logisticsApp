@@ -6,6 +6,9 @@
     <ion-page>
         <ion-header>
             <ion-toolbar>
+                <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
+                    <ion-back-button></ion-back-button>
+                </ion-buttons>
                 <ion-title>List Page</ion-title>
             </ion-toolbar>
         </ion-header>
@@ -14,27 +17,39 @@
             <ion-card v-for="(route, index) in routeArray" :key="index">
                 <ion-card-header>
                     <ion-card-title>{{ route.origin }} to {{ route.destination }}</ion-card-title>
-                    <ion-card-subtitle>{{ route.date }}</ion-card-subtitle>
+                    <ion-card-subtitle>{{ route.date }} at {{ route.time }}</ion-card-subtitle>
                 </ion-card-header>
 
                 <ion-card-content>
                     <!-- Here you can add additional information about the item if needed -->
                     <p>Price per KG: €{{ route.price }}</p>
                     <p>Description: {{ route.description }}</p>
-                    <p>Time: {{ route.time }}</p>
+                    <p>Sender: {{ route.email }}</p>
                 </ion-card-content>
 
-                <ion-button fill="clear">Book</ion-button>
+                <ion-button fill="clear" @click="bookButton(route)">Book</ion-button>
             </ion-card>
         </ion-content>
     </ion-page>
 </template>
 
 <script>
+import { 
+    IonContent, 
+    IonCard, 
+    IonCardHeader, 
+    IonCardTitle, 
+    IonCardSubtitle, 
+    IonCardContent, 
+    IonButton,
+    IonButtons, 
+    IonBackButton 
+} from '@ionic/vue';
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { getRouteArray } from '../services/getRequests.js'; // Replace with your API service
-import { IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton } from '@ionic/vue';
+import { bookRoute } from '../services/postRequests.js'; // Replace with your API service
+import store from '../store.js';
 
 export default {
     components: {
@@ -45,51 +60,73 @@ export default {
         IonCardSubtitle,
         IonCardContent,
         IonButton,
+        IonButtons,
+        IonBackButton
     },
 
     setup() {
-        const route = useRoute();
-        const searchQuery = route.query.searchQuery;
-        const routeArray = ref([]);
+    const router = useRouter();
+    const route = useRoute();
+    const searchQuery = route.query.searchQuery;
+    const routeArray = ref([]);
 
-        onMounted(() => {
-            console.log('searchQuery:', searchQuery);
+    onMounted(() => {
+        console.log('searchQuery:', searchQuery);
 
-            getRouteArray(searchQuery)
-                .then((response) => {
-                    console.log("listPageResponse:", response);
+        getRouteArray(searchQuery)
+            .then((response) => {
+                console.log("listPageResponse:", response);
 
-                    if (Array.isArray(response.routes)) {
-                        routeArray.value = response.routes.map((route) => ({
-                            date: route.date,
-                            origin: route.origin,
-                            destination: route.destination,
-                            price: route.price,
-                            description: route.description,
-                            time: route.time,
-                        }));
+                if (Array.isArray(response.routes)) {
+                    routeArray.value = response.routes.map((route) => ({
+                        date: route.date,
+                        origin: route.origin,
+                        destination: route.destination,
+                        price: route.price,
+                        description: route.description,
+                        time: route.time,
+                        ride_id: route.ride_id,
+                        email: route.email
+                    }));
 
-                        routeArray.value.forEach((route, index) => {
-                            console.log(`Route ${index + 1}:`);
-                            console.log(`Date: ${route.date}`);
-                            console.log(`Origin: ${route.origin}`);
-                            console.log(`Destination: ${route.destination}`);
-                            console.log(`Price: ${route.price}`);
-                            console.log(`Description: ${route.description}`);
-                            console.log(`Time: ${route.time}`);
-                            console.log("----------------------------------");
-                        });
+                    routeArray.value.forEach((route, index) => {
+                        console.log(`Route ${index + 1}:`);
+                        console.log(`Date: ${route.date}`);
+                        console.log(`Origin: ${route.origin}`);
+                        console.log(`Destination: ${route.destination}`);
+                        console.log(`Price: ${route.price}`);
+                        console.log(`Description: ${route.description}`);
+                        console.log(`Time: ${route.time}`);
+                        console.log(`Ride ID: ${route.ride_id}`);
+                        console.log(`Email: ${route.email}`);
+                        console.log("----------------------------------");
+                    });
 
-                    } else {
-                        console.log("No routes found.");
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        });
+                } else {
+                    console.log("No routes found.");
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    });
 
-        return { searchQuery, routeArray };
-    },
+    const bookButton = async (route) => {
+        try {
+            const userID = store.state.user.ID; 
+            const rideID = route.ride_id;
+
+            console.log('Booking ride ID:', rideID);
+            console.log('Booking user ID:', userID);
+
+            const response = await bookRoute(rideID, userID); 
+
+        } catch (error) {
+            console.error('Error booking route:', error);
+        }
+    };
+
+    return { searchQuery, routeArray, bookButton, router };
+},
 };
 </script>

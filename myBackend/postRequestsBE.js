@@ -5,6 +5,7 @@ import { register, User, registerRouteDB, Book } from "./sequelize.js";
 export let loginUser = express.Router();
 export let registerUser = express.Router();
 export let registerRouteBE = express.Router();
+export let bookRouteBE = express.Router();
 
 registerUser = async (req, res) => {
   try {
@@ -77,16 +78,15 @@ registerRouteBE = async (req, res) => {
 
     console.log("newRide ID:", newRideID);
 
-    if (newRideID) {
-      await Book.create({
+    Book.create({
         user_id: user_id,
         ride_id: newRideID,
         is_sender: true,
       });
+
       return res
         .status(201)
         .json({ success: true, message: "Route registered." });
-    }
   } catch (error) {
     console.error("Error registering route", error);
     return res
@@ -94,3 +94,24 @@ registerRouteBE = async (req, res) => {
       .json({ success: false, error: "Error registering route." });
   }
 };
+
+bookRouteBE = async (req, res) => {
+  try {
+    const { user_id, ride_id } = req.body;
+
+    const existingBooking = await Book.findOne({ where: { user_id, ride_id } });
+    if (existingBooking) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Route already booked." });
+    }
+
+    await Book.create({ user_id, ride_id, is_sender: false });
+
+    return res.status(201).json({ success: true, message: "Route booked." });
+  } catch (error) {
+    console.error("Error booking route", error);
+    return res.status(500).json({ success: false, error: "Error booking route." });
+  }
+};
+

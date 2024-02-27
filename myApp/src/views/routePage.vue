@@ -1,7 +1,14 @@
+<style scoped>
+
+</style>
+
 <template>
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
         <ion-title>Planning a trip?</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -43,9 +50,19 @@
 </template>
 
 <script>
+import {
+  IonHeader,
+  IonButton,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonPage,
+  IonDatetime,
+  IonBackButton,
+  IonButtons
+} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { IonHeader, IonButton, IonToolbar, IonTitle, IonContent, IonPage, IonDatetime } from '@ionic/vue';
 import { registerRoute } from '../services/postRequests.js';
 import { getUserData } from '../services/getRequests.js';
 import store from '../store.js';
@@ -54,11 +71,13 @@ export default {
   components: {
     IonHeader,
     IonButton,
+    IonButtons,
     IonToolbar,
     IonTitle,
     IonContent,
     IonPage,
-    IonDatetime
+    IonDatetime,
+    IonBackButton,
   },
   setup() {
     const router = useRouter();
@@ -69,7 +88,7 @@ export default {
     const description = ref('');
     const dateObject = new Date();
     const userID = ref(null);
-    const userEmail = ref(null);
+    let userEmail = ref(null);
 
     console.log('bringPageDate:', selectedDate.value);
 
@@ -105,7 +124,8 @@ export default {
           date: date,
           time: time,
           price: price.value,
-          description: description.value
+          description: description.value,
+          email: userEmail.value
         };
 
         if (depart.value == null) {
@@ -150,6 +170,7 @@ export default {
         console.log('timeBring:', time);
         console.log('priceBring:', price.value);
         console.log('descriptionBring:', description.value);
+        console.log('userEmail:', userEmail.value);
 
       } catch (error) {
         console.error(error);
@@ -161,7 +182,12 @@ export default {
       selectedDate,
       price,
       description,
-      bringStuff
+      bringStuff,
+      router,
+      IonBackButton,
+      IonButtons,
+      IonHeader,
+      IonButton,
     };
   }
 };

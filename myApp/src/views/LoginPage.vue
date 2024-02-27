@@ -16,6 +16,11 @@
   text-align: center;
 }
 
+.logoBox {
+  margin-left: 30px;
+  margin-top: 30px;
+}
+
 ion-content {
   --offset-bottom: auto !important;
   --overflow: auto;
@@ -63,8 +68,8 @@ ion-content {
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col size="10" class="ion-text-center">
-            <!--    <ion-img src="/src/assets/logo/logoTt.png" alt="Logo" class="logo"></ion-img> -->
+          <ion-col size="10" class="logoBox">
+               <ion-img src="/src/assets/logo/TrustTrip.png" alt="Logo" class="logo"></ion-img>
           </ion-col>
         </ion-row>
 

@@ -49,3 +49,16 @@ export const getRouteArray = async (query) => {
     throw error;
   }
 }
+
+export const getUserRoutes = async (userID) => {
+  try {
+    const response = await fetch(`http://localhost:4000/userroutes?userID=${userID}`);
+    const data = await response.json();
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error('getRequest error:', error);
+    throw error;
+  }
+}
