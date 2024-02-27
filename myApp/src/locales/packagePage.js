@@ -1,5 +1,3 @@
-import { at } from "ionicons/icons";
-
 export default {
     en: {
         myPackages: "My Routes & Bookings",

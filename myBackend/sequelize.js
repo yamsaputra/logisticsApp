@@ -169,7 +169,6 @@ async function register(fname, lname, age, email, hashedPassword) {
     console.log("User created successfully. Yeyuh!", newUser);
     return true;
   } catch (error) {
-    // Check if the error is due to a unique constraint violation (user already exists)
     if (error.name === "SequelizeUniqueConstraintError") {
       console.log("User already exists.");
       return { success: false, message: "User already exists." };

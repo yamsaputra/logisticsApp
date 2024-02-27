@@ -4,14 +4,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: black;
-}
-
-.content {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
 }
 </style>
 
@@ -23,6 +15,7 @@
       </ion-toolbar>
     </ion-header>
 
+    <ion-content class="ion-padding">
     <ion-fab slot="fixed" horizontal="end" :edge="true">
       <ion-fab-button>
         <ion-icon :icon="globe"></ion-icon>
@@ -39,6 +32,10 @@
         </ion-fab-button>
       </ion-fab-list>
     </ion-fab>
+
+    <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
     <div v-if="!routesAvailable" class="example-content">
       <ion-card>
@@ -73,7 +70,7 @@
           $t('deletePackage') }}</ion-button>
       </ion-card>
     </div>
-
+  </ion-content>
   </ion-page>
 </template>
 
@@ -83,13 +80,18 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonRefresher,
   IonPage,
   IonTabs,
-  IonCardContent,
   IonFab,
   IonFabButton,
   IonIcon,
-  IonButton
+  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
@@ -106,11 +108,15 @@ export default {
     IonContent,
     IonPage,
     IonTabs,
-    IonCardContent,
     IonFab,
     IonFabButton,
     IonIcon,
-    IonButton
+    IonButton,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardContent
   },
 
   setup() {
@@ -119,8 +125,10 @@ export default {
     const routesAvailable = ref(false);
 
     onMounted(async () => {
+
       try {
-        const userID = store.state.user.ID;
+        const userID = store.state.user.ID; 
+        
         const response = await getUserRoutes(userID);
 
         if (Array.isArray(response.userRoutes) && response.userRoutes.length > 0) {
@@ -136,7 +144,7 @@ export default {
             email: userRoute.ride.email
           }));
 
-          routesAvailable.value = true; // Set to true if routes are available
+          routesAvailable.value = true;
         } else {
           console.log("No routes available.");
         }
@@ -144,6 +152,14 @@ export default {
         console.error(error);
       }
     });
+
+    const handleRefresh = (event) => {
+      console.log('Refreshing...');
+      // Perform data refresh logic here
+      setTimeout(() => {
+        event.target.complete(); // Complete the refresh animation
+      }, 2000); // Simulating a 2-second delay for data refresh
+    };
 
     const deleteButton = async (route) => {
       try {
@@ -170,7 +186,14 @@ export default {
       store.commit('setLocale', locale);
     };
 
-    return { userRoutesArray, deleteButton, routesAvailable, globe, changeLocale };
+    return {
+      userRoutesArray,
+      deleteButton,
+      routesAvailable,
+      globe,
+      changeLocale,
+      handleRefresh
+    };
   }
 };
 </script>
