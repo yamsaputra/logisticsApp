@@ -9,7 +9,7 @@
         <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>Planning a trip?</ion-title>
+        <ion-title>{{ $t('titleRoute') }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -17,33 +17,28 @@
       <form>
         <ion-list>
           <ion-item>
-            <ion-input :label="('Origin')" labelPlacement="floating" v-model="depart"></ion-input>
+            <ion-input :label="$t('originRoute')" labelPlacement="floating" v-model="depart"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Destination')" labelPlacement="floating" v-model="target"></ion-input>
+            <ion-input :label="$t('destinationRoute')" labelPlacement="floating" v-model="target"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Date & Time</ion-label>
-            <ion-datetime :label="('Date & Time')" labelPlacement="floating" v-model="selectedDate"></ion-datetime>
+            <ion-label>{{ $t('dateRoute') }}</ion-label>
+            <ion-datetime labelPlacement="floating" v-model="selectedDate"></ion-datetime>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Price per KG in €')" labelPlacement="floating" v-model="price"></ion-input>
+            <ion-input :label="$t('pricePerKGRoute')" labelPlacement="floating" v-model="price"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Description')" labelPlacement="floating" v-model="description"></ion-input>
+            <ion-input :label="$t('descRoute')" labelPlacement="floating" v-model="description"></ion-input>
           </ion-item>
-
-          <!-- <ion-item>
-            <ion-label position="floating">Contact number</ion-label>
-            <ion-input v-model="number"></ion-input>
-          </ion-item> -->
         </ion-list>
 
-        <ion-button expand="full" @click="bringStuff">Submit</ion-button>
+        <ion-button expand="full" @click="bringStuff">{{ $t('submitRoute') }}</ion-button>
       </form>
     </ion-content>
   </ion-page>
@@ -64,7 +59,6 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { registerRoute } from '../services/postRequests.js';
-import { getUserData } from '../services/getRequests.js';
 import store from '../store.js';
 
 export default {
@@ -176,6 +170,11 @@ export default {
         console.error(error);
       }
     };
+
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
     return {
       depart,
       target,
@@ -188,6 +187,12 @@ export default {
       IonButtons,
       IonHeader,
       IonButton,
+      IonToolbar,
+      IonTitle,
+      IonContent,
+      IonPage,
+      IonDatetime,
+      changeLocale
     };
   }
 };

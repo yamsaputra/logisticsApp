@@ -10,9 +10,26 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>My Profile</ion-title>
+        <ion-title>{{ $t('myProfile') }}</ion-title>
       </ion-toolbar>
     </ion-header>
+
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
     <ion-content>
       <ion-card>
@@ -20,17 +37,17 @@
         <ion-card-header>
 <!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
           <ion-card-title v-if="loading">
-            <p>Unable to acquire account data.</p>
+            <p>{{ $t('unableAccountData') }}</p>
           </ion-card-title>
-          <ion-card-title v-else>Greetings, {{ fname }}</ion-card-title>
+          <ion-card-title v-else>{{ $t('greetingsAcc') }}, {{ fname }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <div class="account-info">
             <ion-card-title v-if="loading">
-            <p>Unable to acquire e-mail.</p>
+            <p>{{ $t('unableAccountEmail') }}</p>
           </ion-card-title>
             <div v-else>
-              <p>Email: {{ email }}</p>
+              <p>E-mail: {{ email }}</p>
             </div>
           </div>
         </ion-card-content>
@@ -51,8 +68,14 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonTabBar
+  IonTabBar,
+  IonButton,
+  IonButtons,
+  IonIcon,
+  IonFab,
+  IonFabButton,
 } from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
 import store from '../store.js';
 import { getUserData } from '../services/getRequests.js'; // Replace with your account service
@@ -60,7 +83,8 @@ import { getUserData } from '../services/getRequests.js'; // Replace with your a
 export default {
   components: {
     IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar
+    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar,
+    IonButton, IonButtons, IonIcon, IonFab, IonFabButton
   },
   setup() {
     let fname = ref();
@@ -89,7 +113,11 @@ export default {
       }
     });
 
-    return { fname, lname, email, loading };
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return { fname, lname, email, loading, globe, changeLocale };
   }
 };	
 </script>

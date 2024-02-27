@@ -9,25 +9,25 @@
                 <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>List Page</ion-title>
+                <ion-title>{{ $t('titleList') }}</ion-title>
             </ion-toolbar>
         </ion-header>
 
         <ion-content>
             <ion-card v-for="(route, index) in routeArray" :key="index">
                 <ion-card-header>
-                    <ion-card-title>{{ route.origin }} to {{ route.destination }}</ion-card-title>
-                    <ion-card-subtitle>{{ route.date }} at {{ route.time }}</ion-card-subtitle>
+                    <ion-card-title>{{ route.origin }} {{ $t('toList') }} {{ route.destination }}</ion-card-title>
+                    <ion-card-subtitle>{{ $t('departList') }} : {{ route.date }} {{ $t('atList') }} {{ route.time }}</ion-card-subtitle>
                 </ion-card-header>
 
                 <ion-card-content>
                     <!-- Here you can add additional information about the item if needed -->
-                    <p>Price per KG: €{{ route.price }}</p>
-                    <p>Description: {{ route.description }}</p>
-                    <p>Sender: {{ route.email }}</p>
+                    <p>{{ $t('kgPricePerList') }}: €{{ route.price }}</p>
+                    <p>{{ $t('descList') }}: {{ route.description }}</p>
+                    <p>{{ $t('senderList') }}: {{ route.email }}</p>
                 </ion-card-content>
 
-                <ion-button fill="clear" @click="bookButton(route)">Book</ion-button>
+                <ion-button fill="clear" @click="bookButton(route)">{{ $t('bookList') }}</ion-button>
             </ion-card>
         </ion-content>
     </ion-page>
@@ -126,7 +126,11 @@ export default {
         }
     };
 
-    return { searchQuery, routeArray, bookButton, router };
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return { searchQuery, routeArray, bookButton, router, IonBackButton, changeLocale };
 },
 };
 </script>

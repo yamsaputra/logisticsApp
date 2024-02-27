@@ -19,6 +19,23 @@
         <ion-title>{{ $t('header') }}</ion-title>
       </ion-toolbar>
     </ion-header>
+
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
     
     <ion-content>
       <div class="example-content">
@@ -40,12 +57,42 @@
 </template>
 
 <script>
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonButton, IonButtons } from '@ionic/vue';
+import { 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonPage, 
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle, 
+  IonButton, 
+  IonButtons,
+  IonIcon,
+  IonFab,
+  IonFabButton, 
+} from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
+import store from '../store.js';
 
 
 export default {
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonPage, IonButton, IonButtons },
+  components: { 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent, 
+    IonCard, 
+    IonCardContent, 
+    IonCardHeader, 
+    IonCardSubtitle, 
+    IonCardTitle, 
+    IonPage, 
+    IonButton, 
+    IonButtons },
 
   setup() {
     const router = useRouter();
@@ -58,7 +105,11 @@ export default {
       }
     };
 
-    return { routePage };
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return { routePage, globe, changeLocale };
   }
 };
 </script>

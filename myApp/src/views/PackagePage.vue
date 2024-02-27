@@ -1,49 +1,76 @@
 <style scoped>
 .example-content {
   display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color:black;
-  }
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: black;
+}
 
+.content {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 </style>
 
 <template>
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Packages</ion-title>
+        <ion-title>{{ $t('myPackages') }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+
     <div v-if="!routesAvailable" class="example-content">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>No routes available.</ion-card-title>
+          <ion-card-title>{{ $t('noRoutes') }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p>There are no routes available for your account.</p>
+          <p>{{ $t('noRoutesDesc') }}</p>
         </ion-card-content>
       </ion-card>
     </div>
 
-    <div v-else>
+    <div v-else class="content">
       <ion-card v-for="(route, index) in userRoutesArray" :key="index">
         <ion-card-header>
-          <ion-card-title>{{ route.origin }} to {{ route.destination }}</ion-card-title>
-          <ion-card-subtitle>{{ route.date }}</ion-card-subtitle>
+          <ion-card-title>{{ route.origin }} {{ $t('toPackage') }} {{ route.destination }}</ion-card-title>
+          <ion-card-subtitle>{{ $t('datePackage') }} : {{ route.date }} {{ $t('atPackage') }} {{ route.time
+          }}</ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content>
-          <p>€ {{ route.price }} pro KG</p>
-          <p> {{ route.description }}</p>
-          <p>{{ route.time }}</p>
-          <p v-if="route.is_sender == 1">Sender</p>
-          <p v-else>Receiver</p>
+          <p>€ {{ route.price }} {{ $t('packageKG') }}</p>
+          <p>{{ $t('descPackage') }} : {{ route.description }}</p>
+          <p></p>
+          <p v-if="route.is_sender == 1">{{ $t('packageSender') }} : {{ route.email }}</p>
+          <div v-else>
+            <p>{{ $t('packageReceiver') }} : {{ route.email }}</p>
+          </div>
         </ion-card-content>
 
-        <ion-button v-if="route.is_sender == 1" color="danger" @click="deleteButton(route)">Delete</ion-button>
+        <ion-button v-if="route.is_sender == 1" color="danger" @click="deleteButton(route)">{{
+          $t('deletePackage') }}</ion-button>
       </ion-card>
     </div>
 
@@ -58,8 +85,13 @@ import {
   IonContent,
   IonPage,
   IonTabs,
-IonCardContent
+  IonCardContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonButton
 } from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import store from '../store.js';
@@ -74,10 +106,14 @@ export default {
     IonContent,
     IonPage,
     IonTabs,
-    IonCardContent
-},
+    IonCardContent,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonButton
+  },
 
-setup() {
+  setup() {
     const router = useRouter();
     const userRoutesArray = ref([]);
     const routesAvailable = ref(false);
@@ -96,7 +132,8 @@ setup() {
             price: userRoute.ride.price,
             time: userRoute.ride.time,
             description: userRoute.ride.description,
-            rideID: userRoute.ride.ride_id
+            rideID: userRoute.ride.ride_id,
+            email: userRoute.ride.email
           }));
 
           routesAvailable.value = true; // Set to true if routes are available
@@ -129,7 +166,11 @@ setup() {
       }
     };
 
-    return { userRoutesArray, deleteButton, routesAvailable };
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return { userRoutesArray, deleteButton, routesAvailable, globe, changeLocale };
   }
 };
 </script>

@@ -32,14 +32,31 @@
       </ion-toolbar>
     </ion-header>
 
+    <ion-fab slot="fixed" horizontal="end" :edge="true">
+      <ion-fab-button>
+        <ion-icon :icon="globe"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button @click="changeLocale('id')">
+          ID
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')">
+          EN
+        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')">
+          DE
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+
     <ion-content>
       <div class="description">
         <ion-card color="light">
           <ion-card-header>
-            <ion-card-title>Sending a package?</ion-card-title>
+            <ion-card-title>{{ $t('homeTitle') }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <p>Search available routes based on origin & target location</p>
+            <p>{{ $t('homeDesc') }}</p>
           </ion-card-content>
         </ion-card>
       </div>
@@ -47,8 +64,8 @@
 
     <ion-content>
       <div class="example-content">
-        <IonSearchbar animated="true" placeholder="Search for a destination" class="centered-searchbar"
-          v-model="searchQuery" @keyup.enter="search"></IonSearchbar> <!-- @input=fetchRecommendations -->
+        <IonSearchbar animated="true" :placeholder="$t('searchBar')" class="centered-searchbar"
+          v-model="searchQuery" @keyup.enter="search"></IonSearchbar>
       </div>
     </ion-content>
   </ion-page>
@@ -63,8 +80,11 @@ import {
   IonPage,
   IonSearchbar,
   IonDatetime,
-  IonDatetimeButton, // Add this line
+  IonDatetimeButton,
+  IonFab,
+  IonFabButton
 } from '@ionic/vue';
+import { globe } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getRouteData } from '../services/getRequests.js';
@@ -81,6 +101,8 @@ export default {
     IonSearchbar,
     IonDatetime,
     IonDatetimeButton,
+    IonFab,
+    IonFabButton
   },
 
   setup() {
@@ -105,21 +127,24 @@ export default {
         const response = await getRouteData(encodedSearchQuery);
 
         if (response.message === "Route found.") {
-          // Proceed with navigation if routes are found
           router.push({
             name: 'listPage',
             query: { searchQuery: encodedSearchQuery }
           });
         } else {
-          window.alert('No available routes. Please search another target.');
-          throw new Error('No available routes. Please search another target.');
+          window.alert(`No results found for ${searchQuery.value}.`);
+          throw new Error;
         }
       } catch (error) {
         console.error(error);
       }
     };
 
-    return { searchQuery, search };
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    return { searchQuery, search, globe, changeLocale };
   },
 
 

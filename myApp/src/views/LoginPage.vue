@@ -93,7 +93,7 @@ ion-content {
               </ion-item>
 
               <ion-button expand="full" @click="login">Login</ion-button>
-              <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+              <div v-if="errorMessage" class="error-message">{{ $t('errorMessage') }}</div>
             </ion-col>
 
 
