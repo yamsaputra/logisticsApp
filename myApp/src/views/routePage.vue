@@ -1,8 +1,15 @@
+<style scoped>
+
+</style>
+
 <template>
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Planning a trip?</ion-title>
+        <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ $t('titleRoute') }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -10,55 +17,61 @@
       <form>
         <ion-list>
           <ion-item>
-            <ion-input :label="('Origin')" labelPlacement="floating" v-model="depart"></ion-input>
+            <ion-input :label="$t('originRoute')" labelPlacement="floating" v-model="depart"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Destination')" labelPlacement="floating" v-model="target"></ion-input>
+            <ion-input :label="$t('destinationRoute')" labelPlacement="floating" v-model="target"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Date & Time</ion-label>
-            <ion-datetime :label="('Date & Time')" labelPlacement="floating" v-model="selectedDate"></ion-datetime>
+            <ion-label>{{ $t('dateRoute') }}</ion-label>
+            <ion-datetime labelPlacement="floating" v-model="selectedDate"></ion-datetime>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Price per KG in €')" labelPlacement="floating" v-model="price"></ion-input>
+            <ion-input :label="$t('pricePerKGRoute')" labelPlacement="floating" v-model="price"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-input :label="('Description')" labelPlacement="floating" v-model="description"></ion-input>
+            <ion-input :label="$t('descRoute')" labelPlacement="floating" v-model="description"></ion-input>
           </ion-item>
-
-          <!-- <ion-item>
-            <ion-label position="floating">Contact number</ion-label>
-            <ion-input v-model="number"></ion-input>
-          </ion-item> -->
         </ion-list>
 
-        <ion-button expand="full" @click="bringStuff">Submit</ion-button>
+        <ion-button expand="full" @click="bringStuff">{{ $t('submitRoute') }}</ion-button>
       </form>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
+import {
+  IonHeader,
+  IonButton,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonPage,
+  IonDatetime,
+  IonBackButton,
+  IonButtons
+} from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { IonHeader, IonButton, IonToolbar, IonTitle, IonContent, IonPage, IonDatetime } from '@ionic/vue';
 import { registerRoute } from '../services/postRequests.js';
-import { getUserData } from '../services/getRequests.js';
 import store from '../store.js';
 
 export default {
   components: {
     IonHeader,
     IonButton,
+    IonButtons,
     IonToolbar,
     IonTitle,
     IonContent,
     IonPage,
-    IonDatetime
+    IonDatetime,
+    IonBackButton,
   },
   setup() {
     const router = useRouter();
@@ -69,7 +82,7 @@ export default {
     const description = ref('');
     const dateObject = new Date();
     const userID = ref(null);
-    const userEmail = ref(null);
+    let userEmail = ref(null);
 
     console.log('bringPageDate:', selectedDate.value);
 
@@ -105,7 +118,8 @@ export default {
           date: date,
           time: time,
           price: price.value,
-          description: description.value
+          description: description.value,
+          email: userEmail.value
         };
 
         if (depart.value == null) {
@@ -150,18 +164,35 @@ export default {
         console.log('timeBring:', time);
         console.log('priceBring:', price.value);
         console.log('descriptionBring:', description.value);
+        console.log('userEmail:', userEmail.value);
 
       } catch (error) {
         console.error(error);
       }
     };
+
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
     return {
       depart,
       target,
       selectedDate,
       price,
       description,
-      bringStuff
+      bringStuff,
+      router,
+      IonBackButton,
+      IonButtons,
+      IonHeader,
+      IonButton,
+      IonToolbar,
+      IonTitle,
+      IonContent,
+      IonPage,
+      IonDatetime,
+      changeLocale
     };
   }
 };

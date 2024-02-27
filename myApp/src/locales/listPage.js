@@ -1,0 +1,32 @@
+export default {
+  en: {
+    titleList: "Available Routes",
+    departList: "Departure",
+    toList: "to",
+    atList: "at",
+    kgPricePerList: "Price per KG",
+    descList: "Description",
+    senderList: "Sender",
+    bookList: "Book",
+  },
+  de: {
+    titleList: "Verfügbare Routen",
+    departList: "Abfahrt",
+    toList: "nach",
+    atList: "um",
+    kgPricePerList: "Preis pro KG",
+    descList: "Beschreibung",
+    senderList: "Absender",
+    bookList: "Buchen",
+  },
+  id: {
+    titleList: "Rute Tersedia",
+    departList: "Keberangkatan",
+    toList: "ke",
+    atList: "jam",
+    kgPricePerList: "Harga per KG",
+    descList: "Keterangan",
+    senderList: "Pengirim",
+    bookList: "Pesan",
+  },
+};
