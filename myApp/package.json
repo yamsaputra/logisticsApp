@@ -15,6 +15,7 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "fs": "^0.0.1-security",
+    "ionic": "^5.4.16",
     "ionicons": "^7.0.0",
     "mock-aws-s3": "^4.0.2",
     "vite-plugin-html": "^3.2.2",
