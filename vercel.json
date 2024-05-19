@@ -1,0 +1,8 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "myApp/**", "use": "@vercel/static" },
+      { "src": "myBackend/**", "use": "@vercel/node" }
+    ]
+  }
+  

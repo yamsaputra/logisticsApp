@@ -38,23 +38,28 @@
       <form>
         <ion-card>
           <ion-list>
-            <ion-item>              
-              <ion-input :label="$t('firstName')" labelPlacement="floating" v-model="firstName" @keydown.enter="signUp"></ion-input> <!-- placeholder="enter text" for adding disappearing text -->
+            <ion-item>
+              <ion-input :label="$t('firstName')" labelPlacement="floating" v-model="firstName"
+                @keydown.enter="signUp"></ion-input> <!-- placeholder="enter text" for adding disappearing text -->
             </ion-item>
             <ion-item>
-              <ion-input :label="$t('lastName')" labelPlacement="floating" v-model="lastName" @keydown.enter="signUp"></ion-input>
+              <ion-input :label="$t('lastName')" labelPlacement="floating" v-model="lastName"
+                @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
               <ion-input :label="$t('age')" labelPlacement="floating" v-model="age" @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :label="$t('email')" labelPlacement="floating" v-model="email" @keydown.enter="signUp"></ion-input>
+              <ion-input :label="$t('email')" labelPlacement="floating" v-model="email"
+                @keydown.enter="signUp"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :label="$t('password')" labelPlacement="floating" type="password" v-model="password" @keydown.enter="signUp"></ion-input>
+              <ion-input :label="$t('password')" labelPlacement="floating" type="password" v-model="password"
+                @keydown.enter="signUp"></ion-input>
             </ion-item>
-            <ion-item>            
-              <ion-input :label="$t('confirmPassword')" labelPlacement="floating" type="password" v-model="reenterPassword" @keydown.enter="signUp"></ion-input>
+            <ion-item>
+              <ion-input :label="$t('confirmPassword')" labelPlacement="floating" type="password"
+                v-model="reenterPassword" @keydown.enter="signUp"></ion-input>
             </ion-item>
           </ion-list>
           <ion-button v-if="!isSignUpSuccess" expand="full" @click="signUp">{{ $t('signUp') }}</ion-button>
@@ -68,7 +73,9 @@
 </template>
 
 <script>
-import { IonButton, IonHeader } from '@ionic/vue';
+import {
+  IonButton
+} from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { ref } from 'vue';
 import { registerUser } from '../services/postRequests.js';
@@ -76,8 +83,7 @@ import store from '../store.js';
 
 export default {
   components: {
-    IonButton,
-    IonHeader
+    IonButton
   },
 
   setup() {
@@ -100,7 +106,6 @@ export default {
           password: password.value,
           password: reenterPassword.value
         };
-        console.log(formData);
 
         if (firstName.value == null) {
           window.alert("Please enter your first name.");
@@ -112,12 +117,12 @@ export default {
           return;
         }
 
-        if(age.value == null) {
+        if (age.value == null) {
           window.alert("Please enter your age.");
           return;
         }
 
-        if(age.value < 18) {
+        if (age.value < 18) {
           window.alert("You must be at least 18 years old to sign up.");
           return;
         }

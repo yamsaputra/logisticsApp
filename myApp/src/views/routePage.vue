@@ -152,7 +152,7 @@ export default {
         if (response.success) {
           console.log('Success:', response);
           window.alert('Your offer has been submitted.');
-          router.push('/home');
+          router.push('/package');
         } else {
           console.error('Failed to submit offer:', response);
           window.alert('Failed to submit offer. Please try again.');
