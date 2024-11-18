@@ -3,6 +3,7 @@ import Sequelize from "sequelize";
 // Local database
 /* const sequelize = new Sequelize("flyer_db", "Yama", "Redcharmander98", {
   host: "localhost",
+  port: 3306,
   dialect: "mysql",
   dialectOptions: {
     connectTimeout: 60000,
@@ -15,9 +16,10 @@ import Sequelize from "sequelize";
   },
 }); */
 
-// Remote database
-const sequelize = new Sequelize("sql11681953", "sql11681953", "TGyZWQrZ2R", {
-  host: "sql11.freemysqlhosting.net",
+// Docker database (root User)
+const sequelize = new Sequelize("flyer_db", "root", "Redcharmander98", {
+  host: "localhost",
+  port: 3307,
   dialect: "mysql",
   dialectOptions: {
     connectTimeout: 60000,
@@ -30,6 +32,43 @@ const sequelize = new Sequelize("sql11681953", "sql11681953", "TGyZWQrZ2R", {
   },
 });
 
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+testConnection();
+
+// Remote database
+/* const sequelize = new Sequelize("sql11681953", "sql11681953", "TGyZWQrZ2R", {
+  host: "sql11.freemysqlhosting.net",
+  dialect: "mysql",
+  dialectOptions: {
+    connectTimeout: 60000,
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
+}); */
+
+async function syncModels() {
+  try {
+    await sequelize.sync({ alter: true });
+    console.log('Models synchronized successfully.');
+  } catch (error) {
+    console.error('Error synchronizing models:', error);
+  }
+}
+
+syncModels();
+
 // Define the user model
 const User = sequelize.define(
   "users",
@@ -37,6 +76,7 @@ const User = sequelize.define(
     user_id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
     fname: {
       type: Sequelize.STRING(45), // VARCHAR(45)
@@ -58,6 +98,10 @@ const User = sequelize.define(
     password: {
       type: Sequelize.STRING(60), // VARCHAR(45)
       allowNull: false,
+    },
+    dateJoined: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
     },
     rating: {
       type: Sequelize.DOUBLE,
@@ -104,27 +148,33 @@ const Ride = sequelize.define(
     email: {
       type: Sequelize.STRING(45),
       allowNull: false,
-    }
+    },
   },
   {
     timestamps: false,
   }
 );
 
-const Book = sequelize.define("user_has_rides", {
-  user_id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
+const Book = sequelize.define(
+  "user_has_rides",
+  {
+    user_id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+    },
+    ride_id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+    },
+    is_sender: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+    },
   },
-  ride_id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-  },
-  is_sender: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
 // Sync the model with the database
 User.sync({ alter: true })
@@ -151,10 +201,45 @@ Book.sync({ alter: true })
     console.error("Error synchronizing Book model:", error);
   });
 
-  User.belongsToMany(Ride, { through: Book, foreignKey: 'user_id' });
-  Ride.belongsToMany(User, { through: Book, foreignKey: 'ride_id' });
-  Book.belongsTo(Ride, { foreignKey: 'ride_id' });
-  Book.belongsTo(User, { foreignKey: 'user_id' });
+User.belongsToMany(Ride, { through: Book, foreignKey: "user_id" });
+Ride.belongsToMany(User, { through: Book, foreignKey: "ride_id" });
+Book.belongsTo(Ride, { foreignKey: "ride_id" });
+Book.belongsTo(User, { foreignKey: "user_id" });
+
+// Retry the user has rides Transaction
+
+async function alterTable() {
+  let attempts = 0;
+  const maxAttempts = 3;
+
+  while (attempts < maxAttempts) {
+    try {
+      await sequelize.query(
+        "ALTER TABLE `user_has_rides` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;"
+      );
+      console.log("Table altered successfully");
+      break;
+    } catch (error) {
+      if (error.original && error.original.code === "ER_LOCK_DEADLOCK") {
+        attempts++;
+        console.warn(
+          `Deadlock detected. Retrying ${attempts}/${maxAttempts}...`
+        );
+        if (attempts === maxAttempts) {
+          console.error("Max attempts reached. Could not alter table.");
+          throw error;
+        }
+      } else {
+        console.error("An error occurred:", error);
+        throw error;
+      }
+    }
+  }
+}
+
+alterTable().catch((err) => {
+  console.error("Failed to alter table:", err);
+});
 
 // Create a new user
 async function register(fname, lname, age, email, hashedPassword) {
@@ -188,7 +273,6 @@ async function register(fname, lname, age, email, hashedPassword) {
 // Create a new ride
 async function registerRouteDB(bringDataBE) {
   try {
-
     const bringDataDB = {
       origin: bringDataBE.origin,
       destination: bringDataBE.destination,
@@ -196,7 +280,7 @@ async function registerRouteDB(bringDataBE) {
       time: bringDataBE.time,
       price: parseFloat(bringDataBE.price),
       description: bringDataBE.description,
-      email: bringDataBE.email
+      email: bringDataBE.email,
     };
 
     const newRide = await Ride.create({
@@ -206,7 +290,7 @@ async function registerRouteDB(bringDataBE) {
       time: bringDataDB.time,
       price: bringDataDB.price,
       description: bringDataDB.description,
-      email: bringDataDB.email
+      email: bringDataDB.email,
     });
 
     console.log("Ride created successfully. Yeyuh!", newRide);

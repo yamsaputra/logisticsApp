@@ -1,5 +1,5 @@
 import express from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { register, User, registerRouteDB, Book } from "./sequelize.js";
 
 export let loginUser = express.Router();
@@ -57,12 +57,12 @@ loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid password." });
     }
     if (isPasswordValid && user) {
-      console.log("User logged in", user);
+      console.log("pRBE: User logged in", user);
       // code for storing user in session goes here
       return res.status(200).json({ message: "Login successful.", user });
     }
   } catch (error) {
-    console.error("Error logging in user", error);
+    console.error("pRBE: Error logging in user", error);
     return res.status(500).json({ error: "Error logging in user." });
   }
 };

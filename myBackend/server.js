@@ -7,12 +7,14 @@ import { deleteRouteBE } from "./deleteRequestsBE.js";
 const app = express();
 const PORT = 4000;
 
-app.use(
+app.use(cors());
+
+/* app.use(
   cors({
-    origin: "http://localhost:8100",
+    origin: "http://192.1.:8080",
     credentials: true,
   })
-);
+); */
 
 app.use(express.json());
 

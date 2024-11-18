@@ -35,7 +35,7 @@
       <ion-card>
         <img src="../assets/default.png" class="img" />
         <ion-card-header>
-<!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
+          <!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
           <ion-card-title v-if="loading">
             <p>{{ $t('unableAccountData') }}</p>
           </ion-card-title>
@@ -44,17 +44,39 @@
         <ion-card-content>
           <div class="account-info">
             <ion-card-title v-if="loading">
-            <p>{{ $t('unableAccountEmail') }}</p>
-          </ion-card-title>
+              <p>{{ $t('unableAccountEmail') }}</p>
+            </ion-card-title>
             <div v-else>
               <p>E-mail: {{ email }}</p>
             </div>
           </div>
         </ion-card-content>
+        <ion-card-content>
+          <div class="account-info">
+            <ion-card-title v-if="loading">
+              <p>{{ $t('unableAccountDate') }}</p>
+            </ion-card-title>
+            <div v-else>
+              <p>{{ $t('dateJoined') }}: {{ formattedDateJoined }}</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+
+    <ion-content>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ $t('returnToLogin') }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button expand="block" @click="logout">{{ $t('logOut') }}</ion-button>
+        </ion-card-content>
       </ion-card>
     </ion-content>
   </ion-page>
 </template>
+
 
 <script>
 import {
@@ -76,8 +98,9 @@ import {
   IonFabButton,
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import store from '../store.js';
+import { useRouter } from 'vue-router';
 import { getUserData } from '../services/getRequests.js'; // Replace with your account service
 
 export default {
@@ -87,14 +110,23 @@ export default {
     IonButton, IonButtons, IonIcon, IonFab, IonFabButton
   },
   setup() {
-    let fname = ref();
-    let email = ref();
-    let lname = ref();
+    let fname = ref('');
+    let email = ref('');
+    let lname = ref('');
+    const router = useRouter();
+    let dateJoined = ref('');
     let loading = ref(true);
 
 
     // Fetch account data on component mount
     onMounted(async () => {
+      // Reset properties to ensure previous data is cleared
+      fname.value = '';
+      lname.value = '';
+      email.value = '';
+      dateJoined.value = '';
+      loading.value = true;
+
       try {
         const userEmail = store.state.user.email;
         console.log("accountPageUser:", userEmail);
@@ -106,6 +138,9 @@ export default {
         fname.value = data.user.fname;
         lname.value = data.user.lname;
         email.value = data.user.email;
+        dateJoined.value = data.user.dateJoined;
+
+        console.log(dateJoined.value);
 
         loading.value = false;
       } catch (error) {
@@ -113,11 +148,33 @@ export default {
       }
     });
 
+    // Computed property to format the date
+    const formattedDateJoined = computed(() => {
+      if (!dateJoined.value) return '';
+      const date = new Date(dateJoined.value);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    });
+
     const changeLocale = (locale) => {
       store.commit('setLocale', locale);
     };
 
-    return { fname, lname, email, loading, globe, changeLocale };
-  }
-};	
+    const logout = () => {
+      try {
+        // Clear user data from the store
+        store.commit('clearUserData');
+
+        // Redirect to login page
+        router.push('/login');
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    };
+
+    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout };
+  },
+}
 </script>

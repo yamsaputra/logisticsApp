@@ -1,0 +1,129 @@
+# Connect to MySQL
+mysql -u root -p
+
+# Enter your password when prompted
+
+# Check MySQL version
+SELECT VERSION();
+
+# Show all databases
+SHOW DATABASES;
+
+Connect to MySQL:
+
+mysql -u your_username -p
+
+Select a Database:
+
+USE your_database_name;
+
+Show Databases:
+
+SHOW DATABASES;
+
+Show Tables:
+
+SHOW TABLES;
+
+Describe a Table:
+
+DESCRIBE table_name;
+
+Show Table Structure:
+
+SHOW CREATE TABLE table_name;
+
+
+Data Manipulation Commands
+Select Data:
+
+SELECT * FROM table_name;
+
+Insert Data:
+
+INSERT INTO table_name (column1, column2) VALUES ('value1', 'value2');
+
+Update Data:
+
+UPDATE table_name SET column1 = 'value1' WHERE condition;
+
+Delete Data:
+
+DELETE FROM table_name WHERE condition;
+
+
+Database and Table Management
+Create a Database:
+
+CREATE DATABASE database_name;
+
+Drop a Database:
+
+DROP DATABASE database_name;
+
+Create a Table:
+
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    ...
+);
+
+Drop a Table:
+
+DROP TABLE table_name;
+
+Alter a Table:
+
+ALTER TABLE table_name ADD column_name datatype;
+
+Add a column:
+
+ALTER TABLE table_name DROP COLUMN column_name;
+
+Drop a column:
+
+ALTER TABLE table_name DROP COLUMN column_name;
+
+Modify a column:
+
+ALTER TABLE table_name MODIFY COLUMN column_name datatype;
+
+User Management
+Create a User:
+
+CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+
+Grant Privileges:
+
+GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'host';
+
+Revoke Privileges:
+
+REVOKE ALL PRIVILEGES ON database_name.* FROM 'username'@'host';
+
+Show Grants:
+
+SHOW GRANTS FOR 'username'@'host';
+
+Drop a User:
+
+DROP USER 'username'@'host';
+
+Useful Commands
+Show Current User:
+
+SELECT CURRENT_USER();
+
+Show Process List:
+
+SHOW PROCESSLIST;
+
+Show Status:
+
+SHOW STATUS;
+
+Show Variables:
+
+SHOW VARIABLES;
+

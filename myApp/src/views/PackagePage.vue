@@ -15,7 +15,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
     <ion-fab slot="fixed" horizontal="end" :edge="true">
       <ion-fab-button>
         <ion-icon :icon="globe"></ion-icon>
@@ -33,6 +32,7 @@
       </ion-fab-list>
     </ion-fab>
 
+    <ion-content class="ion-padding">
     <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>

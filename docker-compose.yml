@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build: ./myApp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    networks:
+      - myNetwork
+
+  backend:
+    build: ./myBackend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - myNetwork
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=Redcharmander98
+      - DB_NAME=flyer_db
+      - DB_PORT=3306
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Redcharmander98
+      MYSQL_DATABASE: flyer_db
+    networks:
+      - myNetwork
+
+networks:
+  myNetwork:
+    driver: bridge

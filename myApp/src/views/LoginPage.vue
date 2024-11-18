@@ -179,7 +179,7 @@ export default {
           isLoginSuccess.value = true;
           router.push('/home');
         } else {
-          console.error('Failed to log in:', response);
+          console.error('Failed to log in:', response.message);
           window.alert('Incorrect email or password. Please try again.');
         }
       } catch (error) {

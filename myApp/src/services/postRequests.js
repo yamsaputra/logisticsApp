@@ -49,8 +49,8 @@ export async function loginUser(loginData) {
 
       return userData;
     } else {
-      console.error("Error logging in user:", data.error);
-      return { success: false, message: data.error };
+      console.error("Error logging in user:", data.message);
+      return userData;
     }
   } catch (error) {
     console.error("Error logging in user:", error);
