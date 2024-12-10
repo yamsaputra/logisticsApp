@@ -26,10 +26,10 @@
                     <ion-label :class="{ active: $route.path === '/trust'}">{{ $t('senderTab') }}</ion-label>
                 </ion-tab-button>
 
-                <ion-tab-button tab="message" href="/message">
+               <!--  <ion-tab-button tab="message" href="/message">
                     <ion-icon :icon="chatbubblesIcon" :class="{ active: $route.path === '/message'}" />
                     <ion-label :class="{ active: $route.path === '/message'}">{{ $t('messagesTab') }}</ion-label>
-                </ion-tab-button>
+                </ion-tab-button> -->
 
                 <ion-tab-button tab="account" href="/account">
                     <ion-icon :icon="personIcon" :class="{ active: $route.path === '/account'}" />
