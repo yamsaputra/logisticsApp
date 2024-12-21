@@ -17,7 +17,7 @@ import Sequelize from "sequelize";
 }); */
 
 // Docker database (root User)
-const sequelize = new Sequelize("flyer_db", "root", "Redcharmander98", {
+const sequelize = new Sequelize("tt_db", "root", "Redcharmander98", {
   host: "localhost",
   port: 3307,
   dialect: "mysql",
@@ -42,21 +42,6 @@ async function testConnection() {
 }
 
 testConnection();
-
-// Remote database
-/* const sequelize = new Sequelize("sql11681953", "sql11681953", "TGyZWQrZ2R", {
-  host: "sql11.freemysqlhosting.net",
-  dialect: "mysql",
-  dialectOptions: {
-    connectTimeout: 60000,
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-}); */
 
 async function syncModels() {
   try {
