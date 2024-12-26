@@ -28,5 +28,9 @@ Presentation for Susan from creating user, creating ride and booking a ride
 - Contracts will list all the user's created rides but not the booked rides.
 
 15.11.2024
->Responsive design in progess..
+>Responsive design in progress..
 - https://www.youtube.com/watch?v=H7JxI3-uklk
+
+26.12.2024
+Development migrated to Silhoutte Ryzen
+> npm connectivity issue re-emerging, despite all libraries being up to date.

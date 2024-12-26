@@ -1,7 +1,7 @@
 // GET Request to fetch account data in AccountPage.vue
 export const getAccountData = async () => {
   try {
-    const response = await fetch('http://192.168.99.100:4000/person');
+    const response = await fetch('http://localhost:4000/person');
     const data = await response.json();
     return data;
   } catch (error) {
@@ -13,7 +13,7 @@ export const getAccountData = async () => {
 
 export const getUserData = async (email) => {
   try {
-    const response = await fetch(`http://192.168.99.100:4000/user?email=${encodeURIComponent(email)}`);
+    const response = await fetch(`http://localhost:4000/user?email=${encodeURIComponent(email)}`);
     const data = await response.json();
     console.log(data);
     console.log(response);
@@ -26,7 +26,7 @@ export const getUserData = async (email) => {
 
 export const getRouteData = async (query) => {
   try {
-    const response = await fetch(`http://192.168.99.100:4000/route?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`http://localhost:4000/route?query=${encodeURIComponent(query)}`);
     const data = await response.json();
     console.log(data);
     console.log(response);
@@ -39,7 +39,7 @@ export const getRouteData = async (query) => {
 
 export const getRouteArray = async (query) => {
   try {
-    const response = await fetch(`http://192.168.99.100:4000/routes?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`http://localhost:4000/routes?query=${encodeURIComponent(query)}`);
     const data = await response.json();
     console.log(data);
 
@@ -52,7 +52,7 @@ export const getRouteArray = async (query) => {
 
 export const getUserRoutes = async (userID) => {
   try {
-    const response = await fetch(`http://192.168.99.100:4000/userroutes?userID=${userID}`);
+    const response = await fetch(`http://localhost:4000/userroutes?userID=${userID}`);
     const data = await response.json();
     console.log(data);
 

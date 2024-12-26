@@ -1,6 +1,6 @@
 export async function registerUser(formData) {
   try {
-    const response = await fetch("http://192.168.99.100:4000/register", {
+    const response = await fetch("http://localhost:4000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export async function loginUser(loginData) {
   try {
     const { email, password } = loginData;
 
-    const response = await fetch("http://192.168.99.100:4000/login", {
+    const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export async function registerRoute(bringData, userID) {
     };
 
 
-    const response = await fetch("http://192.168.99.100:4000/bring", {
+    const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export async function bookRoute(rideID, userID) {
       ride_id: rideID,
     };
 
-    const response = await fetch("http://192.168.99.100:4000/book", {
+    const response = await fetch("http://localhost:4000/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
