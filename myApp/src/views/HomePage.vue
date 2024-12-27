@@ -64,8 +64,8 @@
 
     <ion-content>
       <div class="example-content">
-        <IonSearchbar animated="true" :placeholder="$t('searchBar')" class="centered-searchbar"
-          v-model="searchQuery" @keyup.enter="search"></IonSearchbar>
+        <ion-searchbar animated="true" :placeholder="$t('searchBar')" class="centered-searchbar"
+          v-model="searchQuery" @keyup.enter="search"></ion-searchbar>
       </div>
     </ion-content>
   </ion-page>
@@ -125,17 +125,20 @@ export default {
         const encodedSearchQuery = encodeURIComponent(searchQuery.value);
 
         const response = await getRouteData(encodedSearchQuery);
+        
+        console.log("response:", response);
 
-        if (response.message === "Route found.") {
+        if (response.message.includes("successfully fetched")) {
           router.push({
             name: 'listPage',
             query: { searchQuery: encodedSearchQuery }
           });
         } else {
-          window.alert(`No results found for ${searchQuery.value}.`);
-          throw new Error;
+          throw new Error('No results found');
         }
       } catch (error) {
+        window.alert(`No results found for ${searchQuery.value}.`);
+        console.error("unable to transition to listPage");
         console.error(error);
       }
     };

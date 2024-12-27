@@ -34,3 +34,7 @@ Presentation for Susan from creating user, creating ride and booking a ride
 26.12.2024
 Development migrated to Silhoutte Ryzen
 > npm connectivity issue re-emerging, despite all libraries being up to date.
+
+28.12.2024
+>All browser element alerts must be switched to an Ionic Component.
+>Unresolved issue, stored user is not removed on Log Out.

@@ -1,8 +1,6 @@
 <style scoped>
 /* Add your custom styles here */
 
-
-
 .inputLabel {
   font-size: 18px;
   /* Adjust the font size as needed */
@@ -114,6 +112,7 @@ ion-content {
 
 
 <script>
+// Framework import statements.
 import {
   IonContent,
   IonFab,
@@ -123,14 +122,15 @@ import {
   IonGrid,
   IonHeader,
   IonToolbar,
+  onIonViewWillEnter,
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { loginUser } from '../services/postRequests.js';
-import { computed } from 'vue';
-import { watch } from 'vue';
+import { ref, computer, watch } from 'vue';
 import store from '../store.js';
+
+// Service import statements.
+import { loginUser } from '../services/postRequests.js';
 
 export default {
   components: {
@@ -153,6 +153,10 @@ export default {
     const userEmail = computed(() => store.state.user.email);
     const userID = computed(() => store.state.user.ID);
 
+    /**
+     * @description Logs the user in.
+     * @returns {Promise<void>}
+     */
     const login = async () => {
       try {
         const loginData = {
@@ -183,7 +187,7 @@ export default {
           window.alert('Incorrect email or password. Please try again.');
         }
       } catch (error) {
-        console.error('Error logging in:', error);
+        console.error('Internal Server Error 500: Error logging in:', error);
       }
     };
 
@@ -197,6 +201,10 @@ export default {
 
     const changeLocale = (locale) => {
       store.commit('setLocale', locale);
+    };
+
+    const triggerIonViewWillEnter = () => {
+      login();
     };
 
     return {

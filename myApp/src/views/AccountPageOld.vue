@@ -70,7 +70,8 @@
           <ion-card-title>{{ $t('returnToLogin') }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-button expand="block" @click="/* triggerIonViewWillEnter(); */ logout()">{{ $t('logOut') }}</ion-button>
+          <ion-button expand="block" @click="logout">{{ $t('logOut') }}</ion-button>
+          <ion-button expand="block" @click="triggerIonViewWillEnter">Trigger IonViewWillEnter</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -111,7 +112,6 @@ export default {
     IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar,
     IonButton, IonButtons, IonIcon, IonFab, IonFabButton
   },
-  
   setup() {
     let fname = ref('');
     let email = ref('');
@@ -123,7 +123,7 @@ export default {
 
 
     // Fetch account data on component mount
-    const fetchAccountData = async () => {
+    onMounted(async () => {
       // Reset properties to ensure previous data is cleared
       fname.value = '';
       lname.value = '';
@@ -150,7 +150,7 @@ export default {
       } catch (error) {
         console.error('Error fetching account data:', error);
       }
-    };
+    });
 
     // Computed property to format the date
     const formattedDateJoined = computed(() => {
@@ -166,13 +166,7 @@ export default {
       store.commit('setLocale', locale);
     };
 
-    onMounted(() => {
-      console.log('AccountPage mounted');
-    });
-
-/*     const triggerIonViewWillEnter = () => {
-      fetchAccountData();
-    }; */
+    const 
 
     const logout = () => {
       try {
@@ -186,7 +180,7 @@ export default {
       }
     };
 
-    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout, /* triggerIonViewWillEnter */ };
+    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout };
   },
 }
 </script>
