@@ -1,3 +1,10 @@
+// Services for POST requests on the Frontend side.
+
+/**
+ *
+ * @param {*} formData
+ * @returns
+ */
 export async function registerUser(formData) {
   try {
     const response = await fetch("http://localhost:4000/register", {
@@ -11,20 +18,25 @@ export async function registerUser(formData) {
     const data = await response.json();
 
     if (response.status === 201) {
-      console.log("User created successfully.");
+      console.log("registerUser: User created successfully 201.");
       return { success: true, message: data.message };
     } else if (response.status === 400) {
-      console.error("The E-Mail is already being used. (L2)");
+      console.error("registerUser: The E-Mail is already being used 400.");
       return response;
     }
 
     return data;
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error("registerUser: Internal Server Error 500:", error);
     return { success: false, message: "Request to the server failed." };
   }
 }
 
+/**
+ *
+ * @param {*} loginData
+ * @returns
+ */
 export async function loginUser(loginData) {
   try {
     const { email, password } = loginData;
@@ -38,26 +50,29 @@ export async function loginUser(loginData) {
     });
 
     const data = await response.json();
-    console.log("pR - loginResponseData:", data);
+    console.log("loginUser: loginResponseData:", data);
 
-    const userData = [response, data];
-    console.log("pR userData:", userData[1]);
+    console.log("loginUser: data:", data);
 
     if (response.status === 200) {
-      console.log("User logged in");
+      console.log("loginUser: User logged in 200.");
 
-      return response;
+      return { response, data };
     } else {
-      console.error("Error logging in user:", data.message);
-      return response;
+      throw new Error("loginUser: Response was not OK:", response);
     }
   } catch (error) {
-    console.error("Error logging in user:", error);
+    console.error("loginUser: Internal Server Error 500:", error);
     return data;
-    /* return { success: false, message: "Error logging in user." } */
   }
 }
 
+/**
+ *
+ * @param {*} bringData
+ * @param {*} userID
+ * @returns
+ */
 export async function registerRoute(bringData, userID) {
   try {
     console.log("userIDPR:", userID);
@@ -66,7 +81,6 @@ export async function registerRoute(bringData, userID) {
       ...bringData,
       user_id: userID,
     };
-
 
     const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
@@ -85,11 +99,17 @@ export async function registerRoute(bringData, userID) {
 
     return data;
   } catch (error) {
-    console.error("Error bringing package:", error);
+    console.error("registerRoute: Internal Server Error 500:", error);
     return { success: false, message: "Request to the server failed." };
   }
 }
 
+/**
+ *
+ * @param {*} rideID
+ * @param {*} userID
+ * @returns
+ */
 export async function bookRoute(rideID, userID) {
   try {
     console.log("rideIDPR:", rideID);
@@ -110,13 +130,13 @@ export async function bookRoute(rideID, userID) {
     const data = await response.json();
 
     if (response.status === 201) {
-      console.log("Route booked successfully.");
+      console.log("bookRoute: Route booked successfully 201.");
       return { success: true, message: data.message };
     }
 
     return data;
   } catch (error) {
-    console.error("Error booking route:", error);
+    console.error("bookRoute: Internal Server Error 500:", error);
     return { success: false, message: "Request to the server failed." };
   }
 }

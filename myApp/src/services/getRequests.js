@@ -22,13 +22,14 @@ export const getUserData = async (email) => {
   try {
     const response = await fetch(`http://localhost:4000/user?email=${encodeURIComponent(email)}`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('getUserData() response was not OK.');
     }
     const data = await response.json();
-    console.log(response);
-    return data;
+    console.log("getUserData() response:", response);
+    console.log("getUserData() data:", data);
+    return { response, data };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('getUserData() Internal Server Error 500:', error);
     throw error;
   }
 }

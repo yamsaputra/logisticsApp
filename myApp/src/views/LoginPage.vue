@@ -94,7 +94,6 @@ ion-content {
               <div v-if="errorMessage" class="error-message">{{ $t('errorMessage') }}</div>
             </ion-col>
 
-
             <ion-row>
               <ion-col size="12" class="ion-text-center">
                 <p aria-label="newHere">{{ $t('newHere') }}</p>
@@ -169,22 +168,24 @@ export default {
           return;
         }
 
-        const response = await loginUser(loginData);
+        const { response, data } = await loginUser(loginData);
     
+        console.log("login() inputted E-Mail:", loginData.email);
+        console.log("login() inputted Password:", loginData.password);
 
-        console.log(response);
+        console.log("login() response data:", data);
 
-        console.log("loginPage response:", response);
-        console.log("loginPage status:", response.status);
+        console.log("login() response data Email:", data.user.email);
+        console.log("login() response data user_id:", data.user.user_id);
 
         if (response.status === 200) {
-          store.commit("setUserData", { email: response.email, ID: response.user_id });
+          store.commit("setUserData", { email: data.user.email, ID: data.user.user_id });
           router.push('/home');
         } else {
           window.alert('Incorrect email or password. Please try again.');
         }
       } catch (error) {
-        console.error('Internal Server Error 500: Error logging in:', error);
+        console.error('login() Internal Server Error 500: Error logging in:', error);
       }
     };
 

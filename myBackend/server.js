@@ -1,20 +1,18 @@
+// Framework import statements.
 import express from "express";
 import cors from "cors"; // Cross Origin Resource Sharing, to allow requests from other domains and allow the front and backend to be on the same domain.
+
+// Service import statements.
 import { getUser, getRoute, getRoutes, getUserRoutes } from "./services/getRequestsBE.js	";
 import { registerUser, loginUser, registerRouteBE, bookRouteBE } from "./services/postRequestsBE.js";
 import { deleteRouteBE } from "./services/deleteRequestsBE.js";
 
+// Global variables for the Express server.
 const app = express();
 const PORT = 4000;
 
+// Enabling CORS.
 app.use(cors());
-
-/* app.use(
-  cors({
-    origin: "http://192.1.:8080",
-    credentials: true,
-  })
-); */
 
 app.use(express.json());
 

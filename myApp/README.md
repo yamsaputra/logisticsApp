@@ -40,3 +40,21 @@ Development migrated to Silhoutte Ryzen
 >Unresolved issue, stored user is not removed on Log Out.
 
 >stored value in homepage undefined.
+
+01.01.2025
+- LoginPage now stores data correctly into vuex
+- homePage or any other page that doesnt display the stored data doesnt require to load the stored data.
+
+Frontend finishing touches by 3.01.2025 / TODO:
+- stored user is till not cleared upon logout.
+- accountPage loading.value should be reactive with the "v if" if the data has or has not been loaded.
+- go through the process of 
+1. Login
+2. Account page view
+3. Create Route
+4. View Routes
+5. Search Routes
+8. logout
+9. account page view of 2nd account
+10. book the route from the 1st account
+11. view routes.

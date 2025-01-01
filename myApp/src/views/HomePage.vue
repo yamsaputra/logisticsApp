@@ -105,9 +105,10 @@ export default {
   setup() {
     const searchQuery = ref("");
     const router = useRouter();
-    const userEmail = computed(() => store.state.user.email);
-    const userID = computed(() => store.state.user.ID);
-
+    
+    /**
+     * @description Searches for a route based on the search query.
+     */
     const search = async () => {
       try {
         const encodedSearchQuery = encodeURIComponent(searchQuery.value);
@@ -131,29 +132,9 @@ export default {
       }
     };
 
-    /**
-     *
-     * @param locale
-     */
-    fetchAccountData = async () => {
-      try {
-        console.log("homePageUser:", userEmail);
-        console.log("homePageUserID:", userID);
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    };
-
     const changeLocale = (locale) => {
       store.commit("setLocale", locale);
     };
-
-    watch(userEmail, (newValue) => {
-      console.log("homePage: userEmail:", newValue);
-    });
-
-    // Fetch account data on component mount.
-    onMounted(fetchAccountData);
 
     return { searchQuery, search, globe, changeLocale };
   },

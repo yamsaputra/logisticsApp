@@ -66,7 +66,9 @@
           <ion-card-title>{{ $t("returnToLogin") }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-button expand="block" @click="logout">{{ $t('logOut') }}</ion-button>
+          <ion-button expand="block" @click="logout">{{
+            $t("logOut")
+          }}</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -92,51 +94,65 @@ import {
   IonFab,
   IonFabButton,
   onIonViewWillEnter,
-} from '@ionic/vue';
-import { globe } from 'ionicons/icons';
-import { ref, onMounted, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import store from '../store.js';
+} from "@ionic/vue";
+import { globe } from "ionicons/icons";
+import { ref, onMounted, computed, watch } from "vue";
+import { useRouter } from "vue-router";
+import store from "../store.js";
 
-import { getUserData } from '../services/getRequests.js';
+import { getUserData } from "../services/getRequests.js";
 
 export default {
   components: {
-    IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
-      IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar,
-      IonButton, IonButtons, IonIcon, IonFab, IonFabButton
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonPage,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonTabBar,
+    IonButton,
+    IonButtons,
+    IonIcon,
+    IonFab,
+    IonFabButton,
   },
 
   setup() {
-    let fname = ref('');
-    let email = ref('');
-    let lname = ref('');
+    let fname = ref("");
+    let email = ref("");
+    let lname = ref("");
     const userEmail = computed(() => store.state.user.email);
     const userID = computed(() => store.state.user.ID);
     const router = useRouter();
-    let dateJoined = ref('');
+    let dateJoined = ref("");
     let loading = ref(true);
 
-
-    // Fetch account data on component mount
+    /**
+     * @description Fetches the user's account data.
+     */
     const fetchAccountData = async () => {
       loading.value = true;
 
       try {
-        console.log("accountPage userEmail:", userEmail.value);
-      const response = await getUserData(userEmail);
+        console.log("fetchAccountData() userEmail:", userEmail.value);
+        const { response, data } = await getUserData(userEmail.value);
+        console.log("fetchAccountData() data:", data);
 
-        fname.value = response.fname;
-        lname.value = response.lname;
-        email.value = response.email;
-        dateJoined.value = response.dateJoined;
+        console.log("fetchAccountData() data.user.fname:", data.user.fname);
 
-        console.log("accountPage Date Joined:", dateJoined.value);
-        console.log("accountPage Response", response);
+        fname.value = data.user.fname;
+        lname.value = data.user.lname;
+        email.value = data.user.email;
+        dateJoined.value = data.user.dateJoined;
 
         loading.value = false;
       } catch (error) {
-        console.error('Error fetching account data:', error);
+        console.error("fetchAccountData() Internal Server Error 500:", error);
       }
     };
 
@@ -145,44 +161,55 @@ export default {
      * @description Formats the date the user joined the platform.
      */
     const formattedDateJoined = computed(() => {
-      if (!dateJoined.value) return '';
+      if (!dateJoined.value) return "";
       const date = new Date(dateJoined.value);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
     });
 
     /**
-     * @description Logs the user out.
+     * @description Logs the user out. Clears the user data from the store and redirects to the login page.
      */
     const logout = () => {
       try {
-        // Clear user data from the store
-        store.commit('clearUserData');
-
-        // Redirect to login page
-        router.push('/login');
+        store.commit("clearUserData");
+        router.push("/login");
       } catch (error) {
-        console.error('Error during logout:', error);
+        console.error("logout() Internal Server Error 500:", error);
       }
     };
 
+    /**
+     *
+     * @param locale
+     */
     const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+      store.commit("setLocale", locale);
     };
 
-    watch(userEmail, (newValue) => {
-      console.log('accountPage: User changed:', newValue);
+    /**
+     * @description Watches for changes in the user's E-Mail and ID.
+     */
+    watch([userEmail, userID], ([newEmail, newID]) => {
+      console.log("watch() User E-Mail changed:", newEmail);
+      console.log("watch() User ID changed:", newID);
     });
 
-    watch(userID, (newValue) => {
-      console.log('User ID changed:', newValue);
-    });
+    // Fetch account data on component mount.
+    onMounted(fetchAccountData);
 
-     // Fetch account data on component mount.
-    onMounted(fetchAccountData); 
-
-    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout };
-  }
-};</script>
+    return {
+      fname,
+      lname,
+      email,
+      loading,
+      globe,
+      formattedDateJoined,
+      changeLocale,
+      logout,
+    };
+  },
+};
+</script>
