@@ -20,7 +20,6 @@
   justify-content: center;
   height: 150%;
   color: black;
-
 }
 </style>
 
@@ -37,15 +36,9 @@
         <ion-icon :icon="globe"></ion-icon>
       </ion-fab-button>
       <ion-fab-list side="bottom">
-        <ion-fab-button @click="changeLocale('id')">
-          ID
-        </ion-fab-button>
-        <ion-fab-button @click="changeLocale('en')">
-          EN
-        </ion-fab-button>
-        <ion-fab-button @click="changeLocale('de')">
-          DE
-        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('id')"> ID </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')"> EN </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')"> DE </ion-fab-button>
       </ion-fab-list>
     </ion-fab>
 
@@ -53,10 +46,10 @@
       <div class="description">
         <ion-card color="light">
           <ion-card-header>
-            <ion-card-title>{{ $t('homeTitle') }}</ion-card-title>
+            <ion-card-title>{{ $t("homeTitle") }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <p>{{ $t('homeDesc') }}</p>
+            <p>{{ $t("homeDesc") }}</p>
           </ion-card-content>
         </ion-card>
       </div>
@@ -64,13 +57,18 @@
 
     <ion-content>
       <div class="example-content">
-        <ion-searchbar animated="true" :placeholder="$t('searchBar')" class="centered-searchbar"
-          v-model="searchQuery" @keyup.enter="search"></ion-searchbar>
+        <ion-searchbar
+          animated="true"
+          :placeholder="$t('searchBar')"
+          class="centered-searchbar"
+          v-model="searchQuery"
+          @keyup.enter="search"
+        ></ion-searchbar>
       </div>
     </ion-content>
   </ion-page>
 </template>
-  
+
 <script>
 import {
   IonHeader,
@@ -82,14 +80,13 @@ import {
   IonDatetime,
   IonDatetimeButton,
   IonFab,
-  IonFabButton
-} from '@ionic/vue';
-import { globe } from 'ionicons/icons';
-import { onMounted, ref, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { getRouteData } from '../services/getRequests.js';
-import store from '../store.js';
-
+  IonFabButton,
+} from "@ionic/vue";
+import { globe } from "ionicons/icons";
+import { onMounted, ref, computed, watch } from "vue";
+import { useRouter } from "vue-router";
+import { getRouteData } from "../services/getRequests.js";
+import store from "../store.js";
 
 export default {
   components: {
@@ -102,30 +99,30 @@ export default {
     IonDatetime,
     IonDatetimeButton,
     IonFab,
-    IonFabButton
+    IonFabButton,
   },
 
   setup() {
-    const searchQuery = ref('');
+    const searchQuery = ref("");
     const router = useRouter();
     const userEmail = computed(() => store.state.user.email);
-
+    const userID = computed(() => store.state.user.ID);
 
     const search = async () => {
       try {
         const encodedSearchQuery = encodeURIComponent(searchQuery.value);
 
         const response = await getRouteData(encodedSearchQuery);
-        
+
         console.log("response:", response);
 
         if (response.message.includes("successfully fetched")) {
           router.push({
-            name: 'listPage',
-            query: { searchQuery: encodedSearchQuery }
+            name: "listPage",
+            query: { searchQuery: encodedSearchQuery },
           });
         } else {
-          throw new Error('No results found');
+          throw new Error("No results found");
         }
       } catch (error) {
         window.alert(`No results found for ${searchQuery.value}.`);
@@ -135,13 +132,12 @@ export default {
     };
 
     /**
-     * 
-     * @param locale 
+     *
+     * @param locale
      */
     fetchAccountData = async () => {
-     try {
+      try {
         console.log("homePageUser:", userEmail);
-        const userID = store.state.user.ID;
         console.log("homePageUserID:", userID);
       } catch (error) {
         console.log("Error:", error);
@@ -149,19 +145,17 @@ export default {
     };
 
     const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+      store.commit("setLocale", locale);
     };
 
     watch(userEmail, (newValue) => {
       console.log("homePage: userEmail:", newValue);
     });
 
- // Fetch account data on component mount.
+    // Fetch account data on component mount.
     onMounted(fetchAccountData);
 
     return { searchQuery, search, globe, changeLocale };
   },
-
-
 };
 </script>

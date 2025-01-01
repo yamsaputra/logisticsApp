@@ -1,3 +1,5 @@
 {
-    "editor.fontFamily": "CascadiaMono, CascadiaCodeNF,"
+    "editor.fontFamily": "CascadiaMono, CascadiaCodeNF,",
+    "markdown.occurrencesHighlight.enabled": true,
+    "editor.occurrencesHighlight": "multiFile"
 }
