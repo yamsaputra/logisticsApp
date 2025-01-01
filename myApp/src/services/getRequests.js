@@ -14,15 +14,17 @@ export const getAccountData = async () => {
 };
 
 /**
- * @description Fetches route data for RoutePage.vue from the  getRequestsBE.js file.
- * @param {encodeURIComponent} email 
- * @returns {JSON} A promise that resolves to the route data to the getRequests.js file.
+ * @description Fetches route data for RoutePage.vue from getRequestsBE.js.
+ * @param {encodeURIComponent} email Input from LoginPage.vue.
+ * @returns {Promise<JSON>} A promise that resolves to the route data to LoginPage.vue.
  */
 export const getUserData = async (email) => {
   try {
     const response = await fetch(`http://localhost:4000/user?email=${encodeURIComponent(email)}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     const data = await response.json();
-    console.log(data);
     console.log(response);
     return data;
   } catch (error) {
@@ -33,8 +35,8 @@ export const getUserData = async (email) => {
 
 /**
  * @description Fetches route data for RoutePage.vue from the getRequestsBE.js file.
- * @param {*} query From the search bar.
- * @returns 
+ * @param {String} query From the search bar.
+ * @returns {JSON} A promise that resolves to the route data to the RoutePage.vue file.
  */
 export const getRouteData = async (query) => {
   try {
@@ -49,6 +51,11 @@ export const getRouteData = async (query) => {
   }
 }
 
+/**
+ * 
+ * @param {String} query 
+ * @returns {Promise<JSON>} A promise that resolves to the route data to RoutePage.vue.
+ */
 export const getRouteArray = async (query) => {
   try {
     const response = await fetch(`http://localhost:4000/routes?query=${encodeURIComponent(query)}`);

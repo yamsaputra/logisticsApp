@@ -10,7 +10,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{ $t('myProfile') }}</ion-title>
+        <ion-title>{{ $t("myProfile") }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -19,15 +19,9 @@
         <ion-icon :icon="globe"></ion-icon>
       </ion-fab-button>
       <ion-fab-list side="bottom">
-        <ion-fab-button @click="changeLocale('id')">
-          ID
-        </ion-fab-button>
-        <ion-fab-button @click="changeLocale('en')">
-          EN
-        </ion-fab-button>
-        <ion-fab-button @click="changeLocale('de')">
-          DE
-        </ion-fab-button>
+        <ion-fab-button @click="changeLocale('id')"> ID </ion-fab-button>
+        <ion-fab-button @click="changeLocale('en')"> EN </ion-fab-button>
+        <ion-fab-button @click="changeLocale('de')"> DE </ion-fab-button>
       </ion-fab-list>
     </ion-fab>
 
@@ -37,14 +31,16 @@
         <ion-card-header>
           <!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
           <ion-card-title v-if="loading">
-            <p>{{ $t('unableAccountData') }}</p>
+            <p>{{ $t("unableAccountData") }}</p>
           </ion-card-title>
-          <ion-card-title v-else>{{ $t('greetingsAcc') }}, {{ fname }}</ion-card-title>
+          <ion-card-title v-else
+            >{{ $t("greetingsAcc") }}, {{ fname }}</ion-card-title
+          >
         </ion-card-header>
         <ion-card-content>
           <div class="account-info">
             <ion-card-title v-if="loading">
-              <p>{{ $t('unableAccountEmail') }}</p>
+              <p>{{ $t("unableAccountEmail") }}</p>
             </ion-card-title>
             <div v-else>
               <p>E-mail: {{ email }}</p>
@@ -54,10 +50,10 @@
         <ion-card-content>
           <div class="account-info">
             <ion-card-title v-if="loading">
-              <p>{{ $t('unableAccountDate') }}</p>
+              <p>{{ $t("unableAccountDate") }}</p>
             </ion-card-title>
             <div v-else>
-              <p>{{ $t('dateJoined') }}: {{ formattedDateJoined }}</p>
+              <p>{{ $t("dateJoined") }}: {{ formattedDateJoined }}</p>
             </div>
           </div>
         </ion-card-content>
@@ -67,16 +63,15 @@
     <ion-content>
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{ $t('returnToLogin') }}</ion-card-title>
+          <ion-card-title>{{ $t("returnToLogin") }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-button expand="block" @click="/* triggerIonViewWillEnter(); */ logout()">{{ $t('logOut') }}</ion-button>
+          <ion-button expand="block" @click="logout">{{ $t('logOut') }}</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
   </ion-page>
 </template>
-
 
 <script>
 import {
@@ -99,52 +94,45 @@ import {
   onIonViewWillEnter,
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
-import { ref, onMounted, computed } from 'vue';
-/* import store from '../store.js'; */
-import { useStore } from 'vuex';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { getUserData } from '../services/getRequests.js'; // Replace with your account service
+import store from '../store.js';
+
+import { getUserData } from '../services/getRequests.js';
 
 export default {
   components: {
     IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
-    IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar,
-    IonButton, IonButtons, IonIcon, IonFab, IonFabButton
+      IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonTabBar,
+      IonButton, IonButtons, IonIcon, IonFab, IonFabButton
   },
-  
+
   setup() {
     let fname = ref('');
     let email = ref('');
     let lname = ref('');
+    const userEmail = computed(() => store.state.user.email);
+    const userID = computed(() => store.state.user.ID);
     const router = useRouter();
-    const store = useStore();
     let dateJoined = ref('');
     let loading = ref(true);
 
 
     // Fetch account data on component mount
     const fetchAccountData = async () => {
-      // Reset properties to ensure previous data is cleared
-      fname.value = '';
-      lname.value = '';
-      email.value = '';
-      dateJoined.value = '';
       loading.value = true;
 
       try {
-        const userEmail = store.state.user.email;
-        console.log("accountPageUser:", userEmail);
-        const userID = store.state.user.ID;
-        console.log("accountPageUser:", userID);
+        console.log("accountPage userEmail:", userEmail.value);
+      const response = await getUserData(userEmail);
 
-        let data = await getUserData(userEmail);
+        fname.value = response.fname;
+        lname.value = response.lname;
+        email.value = response.email;
+        dateJoined.value = response.dateJoined;
 
-        fname.value = data.user.fname;
-        lname.value = data.user.lname;
-        email.value = data.user.email;
-        dateJoined.value = data.user.dateJoined;
-
-        console.log(dateJoined.value);
+        console.log("accountPage Date Joined:", dateJoined.value);
+        console.log("accountPage Response", response);
 
         loading.value = false;
       } catch (error) {
@@ -153,6 +141,9 @@ export default {
     };
 
     // Computed property to format the date
+    /**
+     * @description Formats the date the user joined the platform.
+     */
     const formattedDateJoined = computed(() => {
       if (!dateJoined.value) return '';
       const date = new Date(dateJoined.value);
@@ -162,18 +153,9 @@ export default {
       return `${day}.${month}.${year}`;
     });
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
-    };
-
-    onMounted(() => {
-      console.log('AccountPage mounted');
-    });
-
-/*     const triggerIonViewWillEnter = () => {
-      fetchAccountData();
-    }; */
-
+    /**
+     * @description Logs the user out.
+     */
     const logout = () => {
       try {
         // Clear user data from the store
@@ -186,7 +168,21 @@ export default {
       }
     };
 
-    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout, /* triggerIonViewWillEnter */ };
-  },
-}
-</script>
+    const changeLocale = (locale) => {
+      store.commit('setLocale', locale);
+    };
+
+    watch(userEmail, (newValue) => {
+      console.log('accountPage: User changed:', newValue);
+    });
+
+    watch(userID, (newValue) => {
+      console.log('User ID changed:', newValue);
+    });
+
+     // Fetch account data on component mount.
+    onMounted(fetchAccountData); 
+
+    return { fname, lname, email, loading, globe, formattedDateJoined, changeLocale, logout };
+  }
+};</script>

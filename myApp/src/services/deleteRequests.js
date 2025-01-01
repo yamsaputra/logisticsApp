@@ -1,7 +1,7 @@
 /**
  * @description This function deletes a package from the database.
  * @param {String} routeID Receives the routeID of the route to be deleted from PackagePage.vue.
- * @returns {JSON} A promise that resolves to the deleteRequestsBE.js file.
+ * @returns {Promise<JSON>} A promise that resolves to the deleteRequestsBE.js file.
  */
 export async function deleteRoute(routeID) {
   try {

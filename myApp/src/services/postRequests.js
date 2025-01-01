@@ -40,17 +40,16 @@ export async function loginUser(loginData) {
     const data = await response.json();
     console.log("pR - loginResponseData:", data);
 
-    const userData = [response, data]
-      console.log("pR userData:", userData.data);
-
+    const userData = [response, data];
+    console.log("pR userData:", userData[1]);
 
     if (response.status === 200) {
       console.log("User logged in");
 
-      return userData;
+      return response;
     } else {
       console.error("Error logging in user:", data.message);
-      return userData;
+      return response;
     }
   } catch (error) {
     console.error("Error logging in user:", error);

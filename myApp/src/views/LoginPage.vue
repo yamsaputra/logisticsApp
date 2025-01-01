@@ -82,7 +82,7 @@ ion-content {
             <ion-col>
 
               <ion-item>
-                <ion-input :label="$t('email')" labelPlacement="floating" v-model="email"></ion-input>
+                <ion-input :label="$t('email')" labelPlacement="floating"  v-model="email"></ion-input>
               </ion-item>
 
               <ion-item>
@@ -126,7 +126,7 @@ import {
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
-import { ref, computer, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import store from '../store.js';
 
 // Service import statements.
@@ -169,21 +169,18 @@ export default {
           return;
         }
 
-        const userData = await loginUser(loginData);
+        const response = await loginUser(loginData);
+    
 
-        const response = userData[0];
-        const data = userData[1];
-
+        console.log(response);
 
         console.log("loginPage response:", response);
-        console.log("loginPage data:", data)
+        console.log("loginPage status:", response.status);
 
         if (response.status === 200) {
-          store.commit("setUserData", { email: email.value, ID: data.user.user_id });
-          isLoginSuccess.value = true;
+          store.commit("setUserData", { email: response.email, ID: response.user_id });
           router.push('/home');
         } else {
-          console.error('Failed to log in:', response.message);
           window.alert('Incorrect email or password. Please try again.');
         }
       } catch (error) {
@@ -201,10 +198,6 @@ export default {
 
     const changeLocale = (locale) => {
       store.commit('setLocale', locale);
-    };
-
-    const triggerIonViewWillEnter = () => {
-      login();
     };
 
     return {

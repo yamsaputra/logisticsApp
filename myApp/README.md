@@ -38,3 +38,5 @@ Development migrated to Silhoutte Ryzen
 28.12.2024
 >All browser element alerts must be switched to an Ionic Component.
 >Unresolved issue, stored user is not removed on Log Out.
+
+>stored value in homepage undefined.

@@ -85,7 +85,7 @@ import {
   IonFabButton
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getRouteData } from '../services/getRequests.js';
 import store from '../store.js';
@@ -108,17 +108,8 @@ export default {
   setup() {
     const searchQuery = ref('');
     const router = useRouter();
+    const userEmail = computed(() => store.state.user.email);
 
-    onMounted(async () => {
-      try {
-        const userEmail = store.state.user.email;
-        console.log("homePageUser:", userEmail);
-        const userID = store.state.user.ID;
-        console.log("homePageUserID:", userID);
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    });
 
     const search = async () => {
       try {
@@ -143,9 +134,30 @@ export default {
       }
     };
 
+    /**
+     * 
+     * @param locale 
+     */
+    fetchAccountData = async () => {
+     try {
+        console.log("homePageUser:", userEmail);
+        const userID = store.state.user.ID;
+        console.log("homePageUserID:", userID);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    };
+
     const changeLocale = (locale) => {
       store.commit('setLocale', locale);
     };
+
+    watch(userEmail, (newValue) => {
+      console.log("homePage: userEmail:", newValue);
+    });
+
+ // Fetch account data on component mount.
+    onMounted(fetchAccountData);
 
     return { searchQuery, search, globe, changeLocale };
   },

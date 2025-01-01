@@ -1,9 +1,11 @@
 import { createStore } from 'vuex';
 
 const store = createStore({
-  state: {
-    user: JSON.parse(localStorage.getItem('user')) || {}, // Initialize user state to an empty object
-    locale: 'en'
+  state () {
+    return {
+      user: JSON.parse(localStorage.getItem('user')) || {}, // Initialize user state to an empty object
+      locale: 'en'
+    };
   },
   mutations: {
     setUserData(state, userData) {

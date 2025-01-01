@@ -1,8 +1,9 @@
 import { createI18n } from 'vue-i18n';
+import { watch } from 'vue';
 import loginPage from './locales/loginPage.js';
 import signupPage from './locales/signupPage.js';
 import trustPage from './locales/trustPage.js';
-import store from './store';
+import store from './store.js';
 import messagePage from './locales/messagePage.js';
 import accountPage from './locales/accountPage.js';
 import packagePage from './locales/packagePage.js';
@@ -12,7 +13,7 @@ import listPage from './locales/listPage.js';
 import routePage from './locales/routePage.js';
 
 const messages = {
-    en : {
+    en: {
         ...loginPage.en,
         ...signupPage.en,
         ...trustPage.en,
@@ -24,40 +25,44 @@ const messages = {
         ...listPage.en,
         ...routePage.en
     },
-    de : {
-    ...loginPage.de,
-    ...signupPage.de,
-    ...trustPage.de,
-    ...messagePage.de,
-    ...accountPage.de,
-    ...packagePage.de,
-    ...homePage.de,
-    ...ionTabs.de,
-    ...listPage.de,
-    ...routePage.de
+    de: {
+        ...loginPage.de,
+        ...signupPage.de,
+        ...trustPage.de,
+        ...messagePage.de,
+        ...accountPage.de,
+        ...packagePage.de,
+        ...homePage.de,
+        ...ionTabs.de,
+        ...listPage.de,
+        ...routePage.de
     },
-    id : {
-    ...loginPage.id,
-    ...signupPage.id,
-    ...trustPage.id,
-    ...messagePage.id,
-    ...accountPage.id,
-    ...packagePage.id,
-    ...homePage.id,
-    ...ionTabs.id,
-    ...listPage.id,
-    ...routePage.id
+    id: {
+        ...loginPage.id,
+        ...signupPage.id,
+        ...trustPage.id,
+        ...messagePage.id,
+        ...accountPage.id,
+        ...packagePage.id,
+        ...homePage.id,
+        ...ionTabs.id,
+        ...listPage.id,
+        ...routePage.id
     }
 };
 
-export const i18n = new createI18n({
-    locale: 'en', //default language
+export default {
+    setup() {
+        watch(
+            () => store.state.locale,
+            (locale) => {
+                i18n.global.locale.value = locale;
+            }
+        );
+    }
+}
+
+export const i18n = createI18n({
+    locale: 'en', // default language
     messages
 });
-
-store.watch(
-    (state) => state.locale,
-    (locale) => {
-        i18n.global.locale = locale;
-    }
-);
