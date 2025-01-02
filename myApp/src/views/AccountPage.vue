@@ -175,6 +175,7 @@ export default {
     const logout = () => {
       try {
         store.commit("clearUserData");
+        console.log("logout() User logged out, stored data cleared.");
         router.push("/login");
       } catch (error) {
         console.error("logout() Internal Server Error 500:", error);

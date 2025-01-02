@@ -1,3 +1,4 @@
+// Importing the createStore function from Vuex - a state management library for Vue.js.
 import { createStore } from 'vuex';
 
 const store = createStore({

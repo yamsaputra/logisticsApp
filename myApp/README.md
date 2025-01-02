@@ -47,6 +47,7 @@ Development migrated to Silhoutte Ryzen
 
 Frontend finishing touches by 3.01.2025 / TODO:
 - stored user is till not cleared upon logout.
+> Issue might originate from the ion tabs, currently rectifying the problem with the proper syntax & utilizing the router.push()
 - accountPage loading.value should be reactive with the "v if" if the data has or has not been loaded.
 - go through the process of 
 1. Login
@@ -58,3 +59,7 @@ Frontend finishing touches by 3.01.2025 / TODO:
 9. account page view of 2nd account
 10. book the route from the 1st account
 11. view routes.
+
+02.01.2025
+- Routers in index.js rectified to work with the "navigateTo()" in ion-tabs.vue
+

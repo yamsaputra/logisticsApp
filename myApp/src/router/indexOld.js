@@ -5,8 +5,10 @@ import trustPage from "../views/trustPage.vue";
 import accountPage from "../views/accountPage.vue";
 import loginPage from "../views/loginPage.vue";
 import signupPage from "../views/signupPage.vue";
+import messagePage from "../views/messagePage.vue";
 import routePage from "../views/routePage.vue";
 import packagePage from "../views/packagePage.vue";
+import mapPage from "../views/mapPage.vue";
 import listPage from "../views/listPage.vue";
 
 const routes = [
@@ -32,6 +34,10 @@ const routes = [
     component: routePage,
   },
   {
+    path: "/map",
+    component: mapPage,
+  },
+  {
     path: "/list",
     name: "listPage",
     component: listPage,
@@ -41,23 +47,28 @@ const routes = [
     component: ionTabs,
     children: [
       {
-        path: "home",
+        path: "",
         name: "Home",
+        redirect: "/home",
+      },
+      {
+        path: "/home",
         component: homePage,
       },
       {
-        path: "package",
-        name: "Package",
+        path: "/package",
         component: packagePage,
       },
       {
-        path: "trust",
-        name: "Trust",
+        path: "/trust",
         component: trustPage,
       },
       {
-        path: "account",
-        name: "Account",
+        path: "/message",
+        component: messagePage,
+      },
+      {
+        path: "/account",
         component: accountPage,
       },
     ],
