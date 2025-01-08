@@ -26,7 +26,7 @@
 
           <ion-item>
             <ion-label>{{ $t('dateRoute') }}</ion-label>
-            <ion-datetime labelPlacement="floating" v-model="selectedDate"></ion-datetime>
+            <ion-datetime display-format="YYYY-MM-DD" picker-format="YYYY-MM-DD" v-model="departureTime"></ion-datetime>
           </ion-item>
 
           <ion-item>
@@ -40,6 +40,14 @@
 
         <ion-button expand="full" @click="bringStuff">{{ $t('submitRoute') }}</ion-button>
       </form>
+
+      <ion-alert
+        :is-open="showAlert"
+        :message="alertMessage"
+        buttons="OK"
+        @didDismiss="showAlert = false"
+      ></ion-alert>
+
     </ion-content>
   </ion-page>
 </template>
@@ -54,7 +62,8 @@ import {
   IonPage,
   IonDatetime,
   IonBackButton,
-  IonButtons
+  IonButtons,
+  IonAlert,
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -72,21 +81,21 @@ export default {
     IonPage,
     IonDatetime,
     IonBackButton,
+    IonAlert,
   },
   setup() {
     const router = useRouter();
     const depart = ref('');
     const target = ref('');
-    const selectedDate = ref(new Date().toISOString());
+    const departureTime = ref("");
     const price = ref('');
     const description = ref('');
-    const dateObject = new Date();
     const userID = ref(null);
-    let userEmail = ref(null);
+    const userEmail = ref(store.state.user.email);
+    const showAlert = ref(false);
+    const alertMessage = ref("");
 
-    console.log('bringPageDate:', selectedDate.value);
-
-
+    console.log('bringPageDate:', departureTime.value);
 
     onMounted(() => {
       try {
@@ -102,57 +111,66 @@ export default {
     const bringStuff = async () => {
       try {
 
-        if (!userID.value) {
-          window.alert("Please log in to submit a route.");
-          return;
-        }
+       if (!store.state.user.ID) {
+        alertMessage.value = "Please log in to submit a route.";
+        showAlert.value = true;
+        return;
+      }
 
-        console.log('Form Submit Time:', selectedDate.value);
+      if (!depart.value) {
+        alertMessage.value = "Please enter your origin.";
+        showAlert.value = true;
+        return;
+      }
 
-        const date = dateObject.toISOString().split('T')[0];
-        const time = dateObject.toISOString().split('T')[1].split('.')[0];
+      if (!target.value) {
+        alertMessage.value = "Please enter your destination.";
+        showAlert.value = true;
+        return;
+      }
+
+      if (!departureTime.value) {
+        alertMessage.value = "Please enter departure date & time.";
+        showAlert.value = true;
+        return;
+      }
+
+      if (!price.value) {
+        alertMessage.value = "Please enter a price.";
+        showAlert.value = true;
+        return;
+      }
+
+      if (!description.value) {
+        alertMessage.value = "Please enter a description.";
+        showAlert.value = true;
+        return;
+      }
+
+        console.log('Form Submit Time:', departureTime.value);
+
+        const date = departureTime.value.split("T")[0];
+        const time = departureTime.value.split("T")[1];
 
         const bringData = {
           origin: depart.value,
           destination: target.value,
-          date: date,
+          date: departureTime.value,
           time: time,
           price: price.value,
           description: description.value,
           email: userEmail.value
         };
 
-        if (depart.value == null) {
-          window.alert("Please enter your origin.");
-          return;
-        }
-
-        if (target.value == null) {
-          window.alert("Please enter your destination.");
-          return;
-        }
-
-        if (selectedDate.value == null) {
-          window.alert("Please enter departure date & time.");
-          return;
-        }
-
-        if (price.value == null) {
-          window.alert("Please enter a price.");
-          return;
-        }
-
-        if (description.value == null) {
-          window.alert("Please enter a description.");
-          return;
-        }
-
         const response = await registerRoute(bringData, userID.value);
 
         if (response.success) {
           console.log('Success:', response);
           window.alert('Your offer has been submitted.');
-          router.push('/package');
+          router.push('/package').then(() => {
+            console.log('Route to package page.');
+            router.go(0);
+          });
         } else {
           console.error('Failed to submit offer:', response);
           window.alert('Failed to submit offer. Please try again.');
@@ -178,7 +196,7 @@ export default {
     return {
       depart,
       target,
-      selectedDate,
+      departureTime,
       price,
       description,
       bringStuff,
@@ -192,8 +210,10 @@ export default {
       IonContent,
       IonPage,
       IonDatetime,
-      changeLocale
-    };
+      changeLocale,
+      showAlert,
+      alertMessage,
   }
+}
 };
 </script>

@@ -1,1 +1,6 @@
-{}
+{
+    "appId": "trusttrip.app",
+    "appName": "TrustTrip",
+    "webDir": "public",
+    "bundledWebRuntime": false
+  }

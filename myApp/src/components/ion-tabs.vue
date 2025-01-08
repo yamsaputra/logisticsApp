@@ -9,13 +9,7 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-<!--      <ion-tab tab="home">
-    </ion-tab>
-    <ion-tab tab="trust">
-    </ion-tab>
-    <ion-tab tab="account">
-    </ion-tab> -->
-    
+
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" @click="navigateTo('home')">
           <ion-icon :icon="searchIcon" :class="{ active: $route.path === '/home' }" />
@@ -47,6 +41,7 @@ import {
   IonPage,
   IonTabs,
   IonRouterOutlet,
+  IonTab,
   IonTabBar,
   IonTabButton,
   IonLabel,
@@ -67,6 +62,7 @@ export default {
     IonPage,
     IonTabs,
     IonRouterOutlet,
+    IonTab,
     IonTabBar,
     IonTabButton,
     IonLabel,

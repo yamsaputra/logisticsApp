@@ -11,3 +11,8 @@ Social based on-demand logistics mobile app.
 ## DevOps
 21.12.2024
 Create fitness functions?
+
+## For Mobile Environment
+8.01.2025
+For deployment in the mobile environment, the backend routes from the frontend must be adjusted 
+- Would probably be the same when deployed to an online hosting service

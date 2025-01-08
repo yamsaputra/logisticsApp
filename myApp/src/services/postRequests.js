@@ -56,10 +56,13 @@ export async function loginUser(loginData) {
 
     if (response.status === 200) {
       console.log("loginUser: User logged in 200.");
-
-      return { response, data };
+      return { status: response.status, data };
+    } else if (response.status === 401 || response.status === 404) {
+      console.error("loginUser() Response was not OK:", response);
+      return { status: response.status, message: "Incorrect E-Mail or Password", data };
     } else {
-      throw new Error("loginUser: Response was not OK:", response);
+      console.error("loginUser() Response was not OK:", response);
+      return { status: response.status, message: "An unexpected error occurred.", data };
     }
   } catch (error) {
     console.error("loginUser: Internal Server Error 500:", error);

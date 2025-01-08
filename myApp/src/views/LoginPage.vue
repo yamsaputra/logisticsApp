@@ -67,7 +67,7 @@ ion-content {
       <ion-grid>
         <ion-row>
           <ion-col size="10" class="logoBox">
-               <ion-img src="/src/assets/logo/TrustTrip.png" alt="Logo" class="logo"></ion-img>
+            <ion-img src="/src/assets/logo/TrustTrip.png" alt="Logo" class="logo"></ion-img>
           </ion-col>
         </ion-row>
 
@@ -82,7 +82,7 @@ ion-content {
             <ion-col>
 
               <ion-item>
-                <ion-input :label="$t('email')" labelPlacement="floating"  v-model="email"></ion-input>
+                <ion-input :label="$t('email')" labelPlacement="floating" v-model="email"></ion-input>
               </ion-item>
 
               <ion-item>
@@ -97,9 +97,7 @@ ion-content {
             <ion-row>
               <ion-col size="12" class="ion-text-center">
                 <p aria-label="newHere">{{ $t('newHere') }}</p>
-                <router-link to="/signup">
-                  <ion-button expand="block">{{ $t('signUp') }}</ion-button>
-                </router-link>
+                <ion-button expand="block" @click="signUp">{{ $t('signUp') }}</ion-button>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -109,6 +107,7 @@ ion-content {
   </ion-page>
 </template>
 
+<ion-alert :is-open="showAlert" :message="alertMessage" buttons="OK" @didDismiss="showAlert = false"></ion-alert>
 
 <script>
 // Framework import statements.
@@ -121,7 +120,9 @@ import {
   IonGrid,
   IonHeader,
   IonToolbar,
-  onIonViewWillEnter,
+  IonButtons,
+  IonPage,
+  IonAlert,
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
@@ -141,6 +142,10 @@ export default {
     IonFabList,
     IonToolbar,
     IonContent,
+    IonButtons,
+    IonPage,
+    IonAlert,
+    IonButtons,
   },
 
   setup() {
@@ -151,6 +156,8 @@ export default {
     const router = useRouter();
     const userEmail = computed(() => store.state.user.email);
     const userID = computed(() => store.state.user.ID);
+    const showAlert = ref(false);
+    const alertMessage = ref("");
 
     /**
      * @description Logs the user in.
@@ -168,25 +175,36 @@ export default {
           return;
         }
 
-        const { response, data } = await loginUser(loginData);
-    
-        console.log("login() inputted E-Mail:", loginData.email);
-        console.log("login() inputted Password:", loginData.password);
+        const { status, data, message } = await loginUser(loginData);
 
-        console.log("login() response data:", data);
+        console.log('login() status:', status);
+        console.log('login() data:', data);
+        console.log('login() message:', message);
 
-        console.log("login() response data Email:", data.user.email);
-        console.log("login() response data user_id:", data.user.user_id);
-
-        if (response.status === 200) {
+        if (status === 200) {
+          console.log("login() response data Email:", data.user.email);
+          console.log("login() response data user_id:", data.user.user_id);
           store.commit("setUserData", { email: data.user.email, ID: data.user.user_id });
           router.push('/home');
+        } else if (status === 401 || status === 404) {
+          alertMessage.value =  'Incorrect E-Mail or Password. Please try again.';
+          showAlert.value = true;
         } else {
-          window.alert('Incorrect email or password. Please try again.');
+          alertMessage.value = 'An unexpected error occurred. Please try again later.';
+          showAlert.value = true;
         }
       } catch (error) {
         console.error('login() Internal Server Error 500: Error logging in:', error);
+        alertMessage.value = 'An unexpected error occurred. Please try again later.';
+        showAlert.value = true;
       }
+    };
+
+    /**
+     * 
+     */
+    const signUp = () => {
+      router.push('/signup');
     };
 
     watch(userEmail, (newValue) => {
@@ -207,7 +225,10 @@ export default {
       errorMessage,
       login,
       changeLocale,
-      globe
+      globe,
+      signUp,
+      showAlert,
+      alertMessage,
     };
   },
 };

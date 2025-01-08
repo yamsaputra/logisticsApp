@@ -1,8 +1,23 @@
 <style scoped>
 .img {
-  width: 100%;
-  height: 200px;
+  width: 50%;
+  height: 150px;
   object-fit: scale-down;
+  display: block;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+ion-card {
+  margin-top: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+
+}
+ion-button {
+  margin-top: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
 }
 </style>
 
@@ -27,50 +42,51 @@
 
     <ion-content>
       <ion-card>
-        <img src="../assets/default.png" class="img" />
+        <img src="@/assets/default.png" class="img" alt="Default Profile Picture"></img>
         <ion-card-header>
-          <!--           <ion-card-subtitle>Account Information</ion-card-subtitle> -->
           <ion-card-title v-if="loading">
-            <p>{{ $t("unableAccountData") }}</p>
+            <ion-text>{{ $t("unableAccountData") }}</ion-text>
           </ion-card-title>
-          <ion-card-title v-else
-            >{{ $t("greetingsAcc") }}, {{ fname }}</ion-card-title
-          >
+          <ion-card-title v-else>
+            <ion-text>{{ $t("greetingsAcc") }}, {{ fname }}</ion-text>
+          </ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <div class="account-info">
-            <ion-card-title v-if="loading">
-              <p>{{ $t("unableAccountEmail") }}</p>
-            </ion-card-title>
-            <div v-else>
-              <p>E-mail: {{ email }}</p>
-            </div>
-          </div>
+          <ion-item>
+            <ion-label>
+              <ion-list v-if="loading">
+                <ion-text>{{ $t("unableAccountEmail") }}</ion-text>
+              </ion-list>
+              <ion-text v-else>
+                E-mail: {{ email }}
+              </ion-text>
+            </ion-label>
+          </ion-item>
         </ion-card-content>
         <ion-card-content>
-          <div class="account-info">
-            <ion-card-title v-if="loading">
-              <p>{{ $t("unableAccountDate") }}</p>
-            </ion-card-title>
-            <div v-else>
-              <p>{{ $t("dateJoined") }}: {{ formattedDateJoined }}</p>
-            </div>
-          </div>
+          <ion-item>
+            <ion-label>
+              <ion-list v-if="loading">
+                <ion-text>{{ $t("unableAccountDate") }}</ion-text>
+              </ion-list>
+              <ion-text v-else>
+                {{ $t("dateJoined") }}: {{ formattedDateJoined }}
+              </ion-text>
+            </ion-label>
+          </ion-item>
         </ion-card-content>
       </ion-card>
-    </ion-content>
+    
 
-    <ion-content>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ $t("returnToLogin") }}</ion-card-title>
-        </ion-card-header>
+
+
+
         <ion-card-content>
-          <ion-button expand="block" @click="logout">{{
-            $t("logOut")
-          }}</ion-button>
+          <ion-button expand="block" @click="logout">
+            {{ $t("logOut") }}
+          </ion-button>
         </ion-card-content>
-      </ion-card>
+
     </ion-content>
   </ion-page>
 </template>
@@ -93,6 +109,11 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
+  IonFabList,
+  IonImg,
+  IonText,
+  IonItem,
+  IonLabel,
   onIonViewWillEnter,
 } from "@ionic/vue";
 import { globe } from "ionicons/icons";
@@ -120,6 +141,11 @@ export default {
     IonIcon,
     IonFab,
     IonFabButton,
+    IonFabList,
+    IonImg,
+    IonText,
+    IonItem,
+    IonLabel,
   },
 
   setup() {
@@ -176,7 +202,10 @@ export default {
       try {
         store.commit("clearUserData");
         console.log("logout() User logged out, stored data cleared.");
-        router.push("/login");
+        router.push("/login").then(() => {
+          console.log("logout() Page redirected and refreshed to the login page.");
+          router.go(0);
+        });
       } catch (error) {
         console.error("logout() Internal Server Error 500:", error);
       }

@@ -5,6 +5,18 @@
   justify-content: center;
   height: 100%;
 }
+ion-refresher-content {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+ion-spinner {
+    --color: #0000009f;
+    width: 100px;
+  height: 1000px;
+  }
 </style>
 
 <template>
@@ -33,9 +45,11 @@
     </ion-fab>
 
     <ion-content class="ion-padding">
-    <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
+        <ion-refresher-content>
+          <ion-spinner name="circular"></ion-spinner>
+        </ion-refresher-content>
+      </ion-refresher>
 
     <div v-if="!routesAvailable" class="example-content">
       <ion-card>
@@ -72,6 +86,7 @@
     </div>
   </ion-content>
   </ion-page>
+
 </template>
 
 <script>
@@ -91,7 +106,9 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
-  IonCardContent
+  IonCardContent,
+  IonRefresherContent,
+  IonSpinner,
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
@@ -116,7 +133,10 @@ export default {
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
-    IonCardContent
+    IonCardContent,
+    IonRefresher,
+    IonRefresherContent,
+    IonSpinner,
   },
 
   setup() {
@@ -155,11 +175,13 @@ export default {
 
     const handleRefresh = (event) => {
       console.log('Refreshing...');
-      // Perform data refresh logic here
-      setTimeout(() => {
-        event.target.complete(); // Complete the refresh animation
-      }, 2000); // Simulating a 2-second delay for data refresh
-    };
+        // Simulate a delay for the animation to play
+    // Delay the page refresh to allow the animation to play
+    setTimeout(() => {
+      event.target.complete(); // Complete the refresh animation
+      router.go(0); // Refresh the page
+    }, 2000); // Adjust the delay as needed
+};
 
     const deleteButton = async (route) => {
       try {
@@ -173,6 +195,7 @@ export default {
         if (response) {
           const refreshRoutes = await getUserRoutes(userID);
           console.log('Refreshed routes:', refreshRoutes);
+          router.go(0);
         }
 
         console.log('Delete route response:', response);
@@ -192,7 +215,8 @@ export default {
       routesAvailable,
       globe,
       changeLocale,
-      handleRefresh
+      handleRefresh,
+      router,
     };
   }
 };

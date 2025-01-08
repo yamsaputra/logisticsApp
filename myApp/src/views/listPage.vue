@@ -1,12 +1,26 @@
 <style scoped>
-/* Add your custom styles here */
+ion-refresher-content {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+ion-spinner {
+    --color: #0000009f;
+    width: 100px;
+  height: 1000px;
+  }
+  .backbutton {
+    margin-left: 10px;
+  }
 </style>
 
 <template>
     <ion-page>
         <ion-header>
             <ion-toolbar>
-                <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.back()">
+                <ion-buttons class="backbutton" slot="start" fill="clear" @click="router.push('/home')">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
                 <ion-title>{{ $t('titleList') }}</ion-title>
@@ -14,6 +28,12 @@
         </ion-header>
 
         <ion-content>
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
+        <ion-refresher-content>
+          <ion-spinner name="circular"></ion-spinner>
+        </ion-refresher-content>
+      </ion-refresher>
+
             <ion-card v-for="(route, index) in routeArray" :key="index">
                 <ion-card-header>
                     <ion-card-title>{{ route.origin }} {{ $t('toList') }} {{ route.destination }}</ion-card-title>
@@ -43,7 +63,10 @@ import {
     IonCardContent, 
     IonButton,
     IonButtons, 
-    IonBackButton 
+    IonBackButton, 
+    IonSpinner,
+    IonRefresher,
+    IonRefresherContent,
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -61,7 +84,10 @@ export default {
         IonCardContent,
         IonButton,
         IonButtons,
-        IonBackButton
+        IonBackButton,
+        IonSpinner,
+        IonRefresher,
+        IonRefresherContent,
     },
 
     setup() {
@@ -70,47 +96,54 @@ export default {
     const searchQuery = route.query.searchQuery;
     const routeArray = ref([]);
 
-    onMounted(() => {
+    const fetchRoutes = async () => {
+      try {
         console.log('searchQuery:', searchQuery);
 
-        getRouteArray(searchQuery)
-            .then((response) => {
-                console.log("listPageResponse:", response);
+        const response = await getRouteArray(searchQuery);
+        console.log("listPageResponse:", response);
 
-                if (Array.isArray(response.routes)) {
-                    routeArray.value = response.routes.map((route) => ({
-                        date: route.date,
-                        origin: route.origin,
-                        destination: route.destination,
-                        price: route.price,
-                        description: route.description,
-                        time: route.time,
-                        ride_id: route.ride_id,
-                        email: route.email
-                    }));
+        if (Array.isArray(response.routes)) {
+          routeArray.value = response.routes.map((route) => ({
+            date: route.date,
+            origin: route.origin,
+            destination: route.destination,
+            price: route.price,
+            description: route.description,
+            time: route.time,
+            ride_id: route.ride_id,
+            email: route.email
+          }));
 
-                    routeArray.value.forEach((route, index) => {
-                        console.log(`Route ${index + 1}:`);
-                        console.log(`Date: ${route.date}`);
-                        console.log(`Origin: ${route.origin}`);
-                        console.log(`Destination: ${route.destination}`);
-                        console.log(`Price: ${route.price}`);
-                        console.log(`Description: ${route.description}`);
-                        console.log(`Time: ${route.time}`);
-                        console.log(`Ride ID: ${route.ride_id}`);
-                        console.log(`Email: ${route.email}`);
-                        console.log("----------------------------------");
-                    });
+          routeArray.value.forEach((route, index) => {
+            console.log(`Route ${index + 1}:`);
+            console.log(`Date: ${route.date}`);
+            console.log(`Origin: ${route.origin}`);
+            console.log(`Destination: ${route.destination}`);
+            console.log(`Price: ${route.price}`);
+            console.log(`Description: ${route.description}`);
+            console.log(`Time: ${route.time}`);
+            console.log(`Ride ID: ${route.ride_id}`);
+            console.log(`Email: ${route.email}`);
+            console.log("----------------------------------");
+          });
 
-                } else {
-                    console.log("No routes found.");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        } else {
+          console.log("No routes found.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    onMounted(() => {
+      fetchRoutes();
     });
 
+/**
+ * 
+ * @param route 
+ */
     const bookButton = async (route) => {
         try {
             const userID = store.state.user.ID; 
@@ -126,11 +159,24 @@ export default {
         }
     };
 
+    /**
+     * 
+     * @param event 
+     */
+    const handleRefresh = (event) => {
+  console.log('Refreshing...');
+  fetchRoutes().then(() => {
+    setTimeout(() => {
+      event.target.complete(); // Complete the refresh animation
+    }, 2000); // Adjust the delay as needed
+  });
+};
+
     const changeLocale = (locale) => {
       store.commit('setLocale', locale);
     };
 
-    return { searchQuery, routeArray, bookButton, router, IonBackButton, changeLocale };
+    return { searchQuery, routeArray, bookButton, router, IonBackButton, changeLocale, handleRefresh };
 },
 };
 </script>

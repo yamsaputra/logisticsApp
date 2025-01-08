@@ -21,6 +21,12 @@
   height: 150%;
   color: black;
 }
+
+ion-button {
+  margin-top: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
 </style>
 
 <template>
@@ -43,7 +49,7 @@
     </ion-fab>
 
     <ion-content>
-      <div class="description">
+      <div :class="descriptionClass">
         <ion-card color="light">
           <ion-card-header>
             <ion-card-title>{{ $t("homeTitle") }}</ion-card-title>
@@ -55,8 +61,8 @@
       </div>
     </ion-content>
 
-    <ion-content>
-      <div class="example-content">
+    <ion-content class="example-content">
+      
         <ion-searchbar
           animated="true"
           :placeholder="$t('searchBar')"
@@ -64,7 +70,20 @@
           v-model="searchQuery"
           @keyup.enter="search"
         ></ion-searchbar>
-      </div>
+
+        <ion-card-content>
+          <ion-button expand="block" @click="search">
+            {{ $t("searchButton") }}
+          </ion-button>
+        </ion-card-content>
+
+        <ion-alert
+        :is-open="showAlert"
+        :message="alertMessage"
+        buttons="OK"
+        @didDismiss="showAlert = false"
+      ></ion-alert>
+
     </ion-content>
   </ion-page>
 </template>
@@ -81,6 +100,9 @@ import {
   IonDatetimeButton,
   IonFab,
   IonFabButton,
+  IonAlert,
+  IonButton,
+  IonButtons,
 } from "@ionic/vue";
 import { globe } from "ionicons/icons";
 import { onMounted, ref, computed, watch } from "vue";
@@ -100,11 +122,17 @@ export default {
     IonDatetimeButton,
     IonFab,
     IonFabButton,
+    IonAlert,
+    IonButton,
+    IonButtons,
   },
 
   setup() {
     const searchQuery = ref("");
     const router = useRouter();
+    const descriptionClass = ref("description");
+    const showAlert = ref(false);
+    const alertMessage = ref("");
     
     /**
      * @description Searches for a route based on the search query.
@@ -115,20 +143,22 @@ export default {
 
         const response = await getRouteData(encodedSearchQuery);
 
-        console.log("response:", response);
-
-        if (response.message.includes("successfully fetched")) {
+        if (response.message) {
           router.push({
             name: "listPage",
             query: { searchQuery: encodedSearchQuery },
           });
-        } else {
+        } else if (response.error) {
+          alertMessage.value= `No results found for ${searchQuery.value}.`;
+          showAlert.value = true;
           throw new Error("No results found");
-        }
+        } else {
+      alertMessage.value = "An unexpected error occurred.";
+      showAlert.value = true;
+      throw new Error("An unexpected error occurred");
+    }
       } catch (error) {
-        window.alert(`No results found for ${searchQuery.value}.`);
-        console.error("unable to transition to listPage");
-        console.error(error);
+        console.error("search() Internal Server Error 500", error.stack);
       }
     };
 
@@ -136,7 +166,7 @@ export default {
       store.commit("setLocale", locale);
     };
 
-    return { searchQuery, search, globe, changeLocale };
+    return { searchQuery, search, globe, changeLocale, descriptionClass, IonButton, alertMessage, showAlert };
   },
 };
 </script>

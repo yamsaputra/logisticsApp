@@ -63,3 +63,16 @@ Frontend finishing touches by 3.01.2025 / TODO:
 02.01.2025
 - Routers in index.js rectified to work with the "navigateTo()" in ion-tabs.vue
 
+08.01.2025
++ stored user not cleared upon log out has been solved. > route.go() added to logout function on accountpage
+
+- ion-button on accountPage follows the proper ionic css styling syntax.
+
+### Pages with updated ion-alert elements.
++ routePage
++ homePage
+
+To do: loginPage
+- If condition for status 404 or 401 is somehow not properly being caught.
+
+
