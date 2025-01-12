@@ -62,33 +62,25 @@ ion-button {
     </ion-content>
 
     <ion-content class="example-content">
-      
-        <ion-searchbar
-          animated="true"
-          :placeholder="$t('searchBar')"
-          class="centered-searchbar"
-          v-model="searchQuery"
-          @keyup.enter="search"
-        ></ion-searchbar>
 
-        <ion-card-content>
-          <ion-button expand="block" @click="search">
-            {{ $t("searchButton") }}
-          </ion-button>
-        </ion-card-content>
+      <ion-searchbar animated="true" :placeholder="$t('searchBar')" class="centered-searchbar" v-model="searchQuery"
+        @keyup.enter="search"></ion-searchbar>
 
-        <ion-alert
-        :is-open="showAlert"
-        :message="alertMessage"
-        buttons="OK"
-        @didDismiss="showAlert = false"
-      ></ion-alert>
+      <ion-card-content>
+        <ion-button expand="block" @click="search">
+          {{ $t("searchButton") }}
+        </ion-button>
+      </ion-card-content>
+
+      <ion-alert :is-open="showAlert" :message="alertMessage" :buttons="['OK']"
+        @didDismiss="showAlert = false"></ion-alert>
 
     </ion-content>
   </ion-page>
 </template>
 
 <script>
+// Framework import statemets.
 import {
   IonHeader,
   IonToolbar,
@@ -107,6 +99,9 @@ import {
 import { globe } from "ionicons/icons";
 import { onMounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+
+// Local service import statements.
 import { getRouteData } from "../services/getRequests.js";
 import store from "../store.js";
 
@@ -128,12 +123,13 @@ export default {
   },
 
   setup() {
+    const { t, locale } = useI18n();
     const searchQuery = ref("");
     const router = useRouter();
     const descriptionClass = ref("description");
     const showAlert = ref(false);
     const alertMessage = ref("");
-    
+
     /**
      * @description Searches for a route based on the search query.
      */
@@ -149,21 +145,20 @@ export default {
             query: { searchQuery: encodedSearchQuery },
           });
         } else if (response.error) {
-          alertMessage.value= `No results found for ${searchQuery.value}.`;
+          alertMessage.value = t('noResults', { query: searchQuery.value });
           showAlert.value = true;
-          throw new Error("No results found");
         } else {
-      alertMessage.value = "An unexpected error occurred.";
-      showAlert.value = true;
-      throw new Error("An unexpected error occurred");
-    }
+          alertMessage.value = t('unexpectedError');
+          showAlert.value = true;
+        }
       } catch (error) {
         console.error("search() Internal Server Error 500", error.stack);
       }
     };
 
-    const changeLocale = (locale) => {
-      store.commit("setLocale", locale);
+    // Change the locale (language) of the page.
+    const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return { searchQuery, search, globe, changeLocale, descriptionClass, IonButton, alertMessage, showAlert };

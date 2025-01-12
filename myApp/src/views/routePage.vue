@@ -44,7 +44,7 @@
       <ion-alert
         :is-open="showAlert"
         :message="alertMessage"
-        buttons="OK"
+        :buttons="['OK']"
         @didDismiss="showAlert = false"
       ></ion-alert>
 
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+// Framework import statements.
 import {
   IonHeader,
   IonButton,
@@ -67,6 +68,9 @@ import {
 } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+// Local service import statements.
 import { registerRoute } from '../services/postRequests.js';
 import store from '../store.js';
 
@@ -84,6 +88,7 @@ export default {
     IonAlert,
   },
   setup() {
+    const { t, locale } = useI18n();
     const router = useRouter();
     const depart = ref('');
     const target = ref('');
@@ -108,41 +113,44 @@ export default {
       }
     });
 
+    /**
+     * @description Submits a route offer.
+     */
     const bringStuff = async () => {
       try {
 
        if (!store.state.user.ID) {
-        alertMessage.value = "Please log in to submit a route.";
+        alertMessage.value = t('loginRequired');
         showAlert.value = true;
         return;
       }
 
       if (!depart.value) {
-        alertMessage.value = "Please enter your origin.";
+        alertMessage.value = t('departNull');
         showAlert.value = true;
         return;
       }
 
       if (!target.value) {
-        alertMessage.value = "Please enter your destination.";
+        alertMessage.value = t('targetNull');
         showAlert.value = true;
         return;
       }
 
       if (!departureTime.value) {
-        alertMessage.value = "Please enter departure date & time.";
+        alertMessage.value = t('dateNull');
         showAlert.value = true;
         return;
       }
 
       if (!price.value) {
-        alertMessage.value = "Please enter a price.";
+        alertMessage.value = t('priceNull');
         showAlert.value = true;
         return;
       }
 
       if (!description.value) {
-        alertMessage.value = "Please enter a description.";
+        alertMessage.value = t('descNull');
         showAlert.value = true;
         return;
       }
@@ -166,14 +174,16 @@ export default {
 
         if (response.success) {
           console.log('Success:', response);
-          window.alert('Your offer has been submitted.');
+          alertMessage.value = t('routeSubmitted');
+          showAlert.value = true;
           router.push('/package').then(() => {
             console.log('Route to package page.');
             router.go(0);
           });
         } else {
           console.error('Failed to submit offer:', response);
-          window.alert('Failed to submit offer. Please try again.');
+          alertMessage.value = t('routeFailed');
+          showAlert.value = true;
         }
 
         console.log('originBring:', depart.value);
@@ -185,15 +195,17 @@ export default {
         console.log('userEmail:', userEmail.value);
 
       } catch (error) {
-        console.error(error);
+        console.error("bringStuff() Internal Server Error 500:", error);
       }
     };
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+      // Change the locale (language) of the page.
+      const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return {
+      t,
       depart,
       target,
       departureTime,

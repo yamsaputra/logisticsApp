@@ -76,10 +76,6 @@ ion-button {
           </ion-item>
         </ion-card-content>
       </ion-card>
-    
-
-
-
 
         <ion-card-content>
           <ion-button expand="block" @click="logout">
@@ -92,6 +88,7 @@ ion-button {
 </template>
 
 <script>
+// Framework import statements.
 import {
   IonHeader,
   IonToolbar,
@@ -119,8 +116,10 @@ import {
 import { globe } from "ionicons/icons";
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
-import store from "../store.js";
+import { useI18n } from "vue-i18n";
 
+// Local service and store import statements.
+import store from "../store.js";
 import { getUserData } from "../services/getRequests.js";
 
 export default {
@@ -149,6 +148,7 @@ export default {
   },
 
   setup() {
+    const { t, locale } = useI18n();
     let fname = ref("");
     let email = ref("");
     let lname = ref("");
@@ -211,12 +211,9 @@ export default {
       }
     };
 
-    /**
-     *
-     * @param locale
-     */
-    const changeLocale = (locale) => {
-      store.commit("setLocale", locale);
+ // Change the locale (language) of the page.
+ const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     /**

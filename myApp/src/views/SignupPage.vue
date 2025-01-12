@@ -68,25 +68,58 @@
           </router-link>
         </ion-card>
       </form>
+
+      <ion-alert
+        :is-open="showAlert"
+        :message="alertMessage"
+        :buttons="['OK']"
+        @didDismiss="showAlert = false"
+      ></ion-alert>
+
     </ion-content>
   </ion-page>
 </template>
 
 <script>
+// Framework import statements.
 import {
-  IonButton
+   IonContent,
+  IonFab,
+  IonFabButton,
+  IonButton,
+  IonFabList,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonPage,
+  IonAlert,
 } from '@ionic/vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { globe } from 'ionicons/icons';
 import { ref } from 'vue';
+
+// Local service import statements.
 import { registerUser } from '../services/postRequests.js';
-import store from '../store.js';
 
 export default {
   components: {
-    IonButton
+    IonButton,
+    IonHeader,
+    IonFab,
+    IonFabButton,
+    IonFabList,
+    IonToolbar,
+    IonContent,
+    IonButtons,
+    IonPage,
+    IonAlert,
+    IonButtons,
   },
 
   setup() {
+    const router = useRouter();
+    const { t, locale } = useI18n();
     const firstName = ref('');
     const lastName = ref('');
     const age = ref('');
@@ -95,7 +128,13 @@ export default {
     const reenterPassword = ref('');
     const isSignUpSuccess = ref(false);
     const errorMessage = ref(null);
+    const showAlert = ref(false);
+    const alertMessage = ref('');
 
+    /**
+     * @description
+     * @returns {Promise<void>}
+     */
     const signUp = async () => {
       try {
         const formData = {
@@ -108,42 +147,50 @@ export default {
         };
 
         if (firstName.value == null) {
-          window.alert("Please enter your first name.");
+          alertMessage.value = t('firstNameNull');
+          showAlert.value = true;
           return;
         }
 
         if (lastName.value == null) {
-          window.alert("Please enter your last name.");
+          alertMessage.value = t('lastNameNull');
+          showAlert.value = true;
           return;
         }
 
         if (age.value == null) {
-          window.alert("Please enter your age.");
+          alertMessage.value = t('ageNull');
+          showAlert.value = true;
           return;
         }
 
         if (age.value < 18) {
-          window.alert("You must be at least 18 years old to sign up.");
+          alertMessage.value = t('underAge');
+          showAlert.value = true;
           return;
         }
 
         if (email.value == null) {
-          window.alert("Please enter your e-mail.");
+          alertMessage.value = t('emailNull');
+          showAlert.value = true;
           return;
         }
 
         if (password.value == null) {
-          window.alert("Please enter a password.");
+          alertMessage.value = t('passwordNull');
+          showAlert.value = true;
           return;
         }
 
         if (password.value.length < 7) {
-          window.alert("Password must be at least 8 characters long.");
+          alertMessage.value = t('passwordLength');
+          showAlert.value = true;
           return;
         }
 
         if (password.value !== reenterPassword.value) {
-          window.alert("Passwords do not match! Please re-enter.");
+          alertMessage.value = t('passwordMatch');
+          showAlert.value = true;
           return;
         }
 
@@ -152,22 +199,30 @@ export default {
         if (response.success) {
           console.log('User signed up:', response);
           isSignUpSuccess.value = true;
-          window.alert("User signed up successfully!");
+          alertMessage.value = t('signUpSuccess');
+          showAlert.value = true;
         } else if (response.status === 400) {
-          window.alert('Email already exists.');
+          alertMessage.value = t('emailExists');
+          showAlert.value = true;
           console.error('Existing e-mail found in database.', response);
         }
 
       } catch (error) {
-        console.error('Error signing up:', error);
+        console.error('signUp() Internal Server Error 500:', error);
       }
     };
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+    const login = () => {
+      router.push('/login');
+    };	
+
+    // Change the locale (language) of the page.
+    const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return {
+      t,
       firstName,
       lastName,
       age,
@@ -177,8 +232,11 @@ export default {
       isSignUpSuccess,
       errorMessage,
       signUp,
+      login,
       changeLocale,
-      globe
+      globe,
+      showAlert,
+      alertMessage,
     };
   },
 };

@@ -90,6 +90,7 @@ ion-spinner {
 </template>
 
 <script>
+// Framework import statements.
 import {
   IonHeader,
   IonToolbar,
@@ -113,6 +114,9 @@ import {
 import { globe } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+// Import local service and store statements.
 import store from '../store.js';
 import { getUserRoutes } from '../services/getRequests.js';
 import { deleteRoute } from '../services/deleteRequests.js';
@@ -140,6 +144,7 @@ export default {
   },
 
   setup() {
+    const { t, locale } = useI18n();
     const router = useRouter();
     const userRoutesArray = ref([]);
     const routesAvailable = ref(false);
@@ -205,11 +210,13 @@ export default {
       }
     };
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+    // Change the locale (language) of the page.
+    const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return {
+      t,
       userRoutesArray,
       deleteButton,
       routesAvailable,

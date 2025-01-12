@@ -8,11 +8,19 @@ Social based on-demand logistics mobile app.
 2. Run "npm start" in the myBackend folder to activate the back-end.
 3. Database is running on phpmyadmin.co with the possibilty to run locally. Configurable in the "sequelize.js" file.
 
-## DevOps
-21.12.2024
-Create fitness functions?
 
 ## For Mobile Environment
 8.01.2025
 For deployment in the mobile environment, the backend routes from the frontend must be adjusted 
 - Would probably be the same when deployed to an online hosting service
+
+## Continuos Delivery and DevOps Requirements
+### DevOps Cycle and its Implementation
+21.12.2024
+Create fitness functions?
+
+12.01.2024
+
+
+### Continuos Delivery Pipeline and technical details
+12.01.2024

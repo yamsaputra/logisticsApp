@@ -1,5 +1,8 @@
+// Framework import statements.
 import { createI18n } from 'vue-i18n';
 import { watch } from 'vue';
+
+// Locale import statements.
 import loginPage from './locales/loginPage.js';
 import signupPage from './locales/signupPage.js';
 import trustPage from './locales/trustPage.js';
@@ -53,16 +56,19 @@ const messages = {
 
 export default {
     setup() {
-        watch(
-            () => store.state.locale,
-            (locale) => {
-                i18n.global.locale.value = locale;
-            }
-        );
+      const { locale } = i18n.global;
+  
+      watch(
+        () => store.state.locale,
+        (newLocale) => {
+          locale.value = newLocale;
+        }
+      );
     }
-}
+  };
 
 export const i18n = createI18n({
+    legacy: false, // Use Composition API mode
     locale: 'en', // default language
     messages
-});
+  });

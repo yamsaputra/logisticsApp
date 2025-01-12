@@ -57,6 +57,7 @@
 </template>
 
 <script>
+// Framework import statements.
 import { 
   IonHeader, 
   IonToolbar, 
@@ -76,6 +77,9 @@ import {
 } from '@ionic/vue';
 import { globe } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+// Local store import statement.
 import store from '../store.js';
 
 
@@ -95,6 +99,7 @@ export default {
     IonButtons },
 
   setup() {
+    const { t, locale } = useI18n();
     const router = useRouter();
 
     const routePage = async () => {
@@ -105,8 +110,9 @@ export default {
       }
     };
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+    // Change the locale (language) of the page.
+    const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return { routePage, globe, changeLocale };

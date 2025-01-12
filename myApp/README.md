@@ -71,8 +71,26 @@ Frontend finishing touches by 3.01.2025 / TODO:
 ### Pages with updated ion-alert elements.
 + routePage
 + homePage
++ loginPage
++ signUpPage
+
+### pages with updated i18n.
++ loginPage
++ homePage
++ packagePage
++ trustPage
++ AccountPage
++ routePage
 
 To do: loginPage
 - If condition for status 404 or 401 is somehow not properly being caught.
+
+12.01.2024
+- loginPage condition issue solved > the ion Alert was not properly placed and the else if condition was actually working.
+- All alert messages from window.alert have been updated.
+- i18n API updated to Vue's composition API.
+
+- FrontEnd Beta version completed.
+
 
 

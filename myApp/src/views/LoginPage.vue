@@ -103,11 +103,17 @@ ion-content {
           </ion-grid>
         </ion-card>
       </form>
+
+      <ion-alert
+        :is-open="showAlert"
+        :message="alertMessage"
+        :buttons="['OK']"
+        @didDismiss="showAlert = false"
+      ></ion-alert>
+
     </ion-content>
   </ion-page>
 </template>
-
-<ion-alert :is-open="showAlert" :message="alertMessage" buttons="OK" @didDismiss="showAlert = false"></ion-alert>
 
 <script>
 // Framework import statements.
@@ -127,10 +133,11 @@ import {
 import { globe } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { ref, computed, watch } from 'vue';
-import store from '../store.js';
+import { useI18n } from 'vue-i18n';
 
-// Service import statements.
+// Local service import statements.
 import { loginUser } from '../services/postRequests.js';
+import store from '../store.js';
 
 export default {
   components: {
@@ -149,10 +156,10 @@ export default {
   },
 
   setup() {
+    const { t, locale } = useI18n();
     const email = ref('');
     const password = ref('');
     const errorMessage = ref(null);
-    const isLoginSuccess = ref(false);
     const router = useRouter();
     const userEmail = computed(() => store.state.user.email);
     const userID = computed(() => store.state.user.ID);
@@ -187,10 +194,10 @@ export default {
           store.commit("setUserData", { email: data.user.email, ID: data.user.user_id });
           router.push('/home');
         } else if (status === 401 || status === 404) {
-          alertMessage.value =  'Incorrect E-Mail or Password. Please try again.';
+          alertMessage.value = t('incorrectLogin');
           showAlert.value = true;
         } else {
-          alertMessage.value = 'An unexpected error occurred. Please try again later.';
+          alertMessage.value = t('unexpectedErrorLogin');
           showAlert.value = true;
         }
       } catch (error) {
@@ -215,11 +222,13 @@ export default {
       console.log('User ID changed:', newValue);
     });
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+        // Change the locale (language) of the page.
+    const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return {
+      t,
       email,
       password,
       errorMessage,

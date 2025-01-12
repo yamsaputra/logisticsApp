@@ -54,6 +54,7 @@ ion-spinner {
 </template>
 
 <script>
+// Framework import statements.
 import { 
     IonContent, 
     IonCard, 
@@ -70,6 +71,9 @@ import {
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n'; 
+
+// Local service and store import statements.
 import { getRouteArray } from '../services/getRequests.js'; // Replace with your API service
 import { bookRoute } from '../services/postRequests.js'; // Replace with your API service
 import store from '../store.js';
@@ -91,6 +95,7 @@ export default {
     },
 
     setup() {
+      const { locale } = useI18n();
     const router = useRouter();
     const route = useRoute();
     const searchQuery = route.query.searchQuery;
@@ -172,8 +177,9 @@ export default {
   });
 };
 
-    const changeLocale = (locale) => {
-      store.commit('setLocale', locale);
+   // Change the locale (language) of the page.
+   const changeLocale = (newLocale) => {
+      locale.value = newLocale;
     };
 
     return { searchQuery, routeArray, bookButton, router, IonBackButton, changeLocale, handleRefresh };
