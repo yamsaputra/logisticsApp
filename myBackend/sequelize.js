@@ -1,25 +1,14 @@
+// Framework import statements.
 import Sequelize from "sequelize";
+import dotenv from "dotenv";
 
-// Local database
-/* const sequelize = new Sequelize("flyer_db", "Yama", "Redcharmander98", {
-  host: "localhost",
-  port: 3306,
-  dialect: "mysql",
-  dialectOptions: {
-    connectTimeout: 60000,
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-}); */
+// Loads environment variables from the .env file.
+dotenv.config();
 
-// Docker database (root User)
-const sequelize = new Sequelize("tt_db", "root", "Redcharmander98", {
-  host: "localhost",
-  port: 3307,
+// Database connection/configuration.
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   dialect: "mysql",
   dialectOptions: {
     connectTimeout: 60000,

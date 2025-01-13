@@ -5,7 +5,7 @@
  */
 export async function deleteRoute(routeID) {
   try {
-    const response = await fetch(`http://localhost:4000/deleteRoute?routeID=${routeID}`, {
+    const response = await fetch(`http://35.233.101.171:4000/deleteRoute?routeID=${routeID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"

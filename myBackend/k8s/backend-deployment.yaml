@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backend-deployment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -13,21 +13,28 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: gcr.io/trusttrip-447621/backend:latest
-        ports:
-        - containerPort: 4000
-        env:
-        - name: DB_HOST
-          value: "db-service"
-        - name: DB_USER
-          value: "root"
-        - name: DB_PASSWORD
-          value: "Redcharmander98"
-        - name: DB_NAME
-          value: "flyer_db"
-        - name: DB_PORT
-          value: "3306"
+        - name: backend
+          image: gcr.io/trusttrip-447621/backend:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "Redcharmander98"
+            - name: DB_NAME
+              value: "tt_db"
+            - name: DB_PORT
+              value: "3306"
+          resources:
+              requests:
+                memory: "512Mi"
+                cpu: "500m"
+              limits:
+                memory: "6Gi"
+                cpu: "1500m"
 ---
 apiVersion: v1
 kind: Service
@@ -40,3 +47,4 @@ spec:
     - protocol: TCP
       port: 4000
       targetPort: 4000
+  type: LoadBalancer
