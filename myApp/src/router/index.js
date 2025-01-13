@@ -10,6 +10,7 @@ import routePage from "../views/routePage.vue";
 import packagePage from "../views/PackagePage.vue";
 import listPage from "../views/listPage.vue";
 
+// Routes array.
 const routes = [
   {
     path: "/",
