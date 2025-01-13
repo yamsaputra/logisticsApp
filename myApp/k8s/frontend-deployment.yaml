@@ -24,6 +24,8 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "1000m"
+      imagePullSecrets:
+      - name: gcr-json-key
 ---
 apiVersion: v1
 kind: Service
@@ -34,5 +36,5 @@ spec:
     app: frontend
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
