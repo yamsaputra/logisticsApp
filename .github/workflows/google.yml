@@ -14,30 +14,28 @@ jobs:
       contents: read
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        version: 'latest'
-        project_id: ${{ secrets.GCR_TT_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCR_TT_KEY }}
+      - name: Github Actions for Google Cloud Setup
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCR_TT_KEY }}
 
-    - name: Configure Docker
-      run: gcloud auth configure-docker
+      - name: Configure Docker
+        run: gcloud auth configure-docker
 
-    - name: Build Docker image
-      run: docker build -t gcr.io/${{ secrets.GCR_TT_PROJECT_ID }}/frontend-dev:latest -f myApp/Dockerfile myApp
+      - name: Build Docker image
+        run: docker build -t gcr.io/${{ secrets.GCR_TT_PROJECT_ID }}/frontend-dev:latest -f myApp/Dockerfile myApp
 
-    - name: Push Docker image
-      run: docker push gcr.io/trusttrip-447621/frontend-dev:latest
+      - name: Push Docker image
+        run: docker push gcr.io/trusttrip-447621/frontend-dev:latest
 
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy frontend-dev \
-          --image gcr.io/trusttrip-447621/frontend-dev:latest \
-          --platform managed \
-          --region europe-west1  \
-          --allow-unauthenticated \
-          --port 8080
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy frontend-dev \
+            --image gcr.io/trusttrip-447621/frontend-dev:latest \
+            --platform managed \
+            --region europe-west1  \
+            --allow-unauthenticated \
+            --port 8080
