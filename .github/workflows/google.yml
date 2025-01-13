@@ -24,7 +24,7 @@ jobs:
       run: gcloud auth configure-docker
 
     - name: Build Docker image
-      run: docker build -t gcr.io/trusttrip-447621/frontend-dev:latest -f myApp/Dockerfile myApp
+      run: docker build -t gcr.io/${{ secrets.GCR_TT_PROJECT_ID }}/frontend-dev:latest -f myApp/Dockerfile myApp
 
     - name: Push Docker image
       run: docker push gcr.io/trusttrip-447621/frontend-dev:latest
