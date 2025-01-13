@@ -1,3 +1,4 @@
+// Framework import statements.
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import ionTabs from "../components/ion-tabs.vue";
 import homePage from "../views/HomePage.vue";
