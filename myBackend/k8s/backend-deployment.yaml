@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: gcr.io/trusttrip-447621/backend:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DB_HOST
+          value: "db-service"
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "Redcharmander98"
+        - name: DB_NAME
+          value: "flyer_db"
+        - name: DB_PORT
+          value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000

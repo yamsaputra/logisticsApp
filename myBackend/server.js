@@ -35,19 +35,6 @@ app.post("/book", bookRouteBE);
 
 app.delete("/deleteroute", deleteRouteBE);
 
-
-/* app.get('/person', (req, res) => {
-  const person = {
-    name: 'Chris P. Chips',
-    gender: 'Male',
-    age: 25,
-    email: 'chips@chrisp.com',
-    phone: '10-1010-1010',
-    location: 'Brandenburg an der Havel, Germany'
-  };
-  res.json(person);
-}); */
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
