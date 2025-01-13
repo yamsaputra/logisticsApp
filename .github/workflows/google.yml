@@ -53,5 +53,5 @@ jobs:
       - name: Configure kubectl
         run: |
           gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f myBackend/k8s/backend-deployment.yaml
+          kubectl apply -f myApp/k8s/frontend-deployment.yaml
