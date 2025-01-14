@@ -87,6 +87,7 @@ const User = sequelize.define(
   }
 );
 
+// Define the ride model.
 const Ride = sequelize.define(
   "rides",
   {
@@ -129,6 +130,7 @@ const Ride = sequelize.define(
   }
 );
 
+// Define the book model.
 const Book = sequelize.define(
   "user_has_rides",
   {
@@ -150,7 +152,7 @@ const Book = sequelize.define(
   }
 );
 
-// Sync the model with the database
+// Sync the models with the database.
 User.sync({ alter: true })
   .then(() => {
     console.log("User model synchronized with the database.");

@@ -4,11 +4,11 @@
  */
 export const getAccountData = async () => {
   try {
-    const response = await fetch('http://35.233.101.171:4000/person');
+    const response = await fetch('http://localhost:4000/person');
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('gR - getAccountData - Error fetching data:', error);
+    console.error('getAccountData() - Internal Server Error 500:', error);
     throw error;
   }
 };
@@ -20,7 +20,7 @@ export const getAccountData = async () => {
  */
 export const getUserData = async (email) => {
   try {
-    const response = await fetch(`http://35.233.101.171:4000/user?email=${encodeURIComponent(email)}`);
+    const response = await fetch(`http://localhost:4000/user?email=${encodeURIComponent(email)}`);
     if (!response.ok) {
       throw new Error('getUserData() response was not OK.');
     }
@@ -41,7 +41,7 @@ export const getUserData = async (email) => {
  */
 export const getRouteData = async (query) => {
   try {
-    const response = await fetch(`http://35.233.101.171:4000/route?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`http://localhost:4000/route?query=${encodeURIComponent(query)}`);
     const data = await response.json();
     console.log(data);
     console.log(response);
@@ -53,13 +53,13 @@ export const getRouteData = async (query) => {
 }
 
 /**
- * 
+ * @description Fetches the route data for the RoutePage.vue from the getRequestsBE.js file.
  * @param {String} query 
  * @returns {Promise<JSON>} A promise that resolves to the route data to RoutePage.vue.
  */
 export const getRouteArray = async (query) => {
   try {
-    const response = await fetch(`http://35.233.101.171:4000/routes?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`http://localhost:4000/routes?query=${encodeURIComponent(query)}`);
     const data = await response.json();
     console.log(data);
 
@@ -70,9 +70,14 @@ export const getRouteArray = async (query) => {
   }
 }
 
+/**
+ * @description Fetches the route data for the RoutePage.vue from the getRequestsBE.js file.
+ * @param {String} userID 
+ * @returns {Promise<JSON>} A promise that resolves to the route data to RoutePage.vue.
+ */
 export const getUserRoutes = async (userID) => {
   try {
-    const response = await fetch(`http://35.233.101.171:4000/userroutes?userID=${userID}`);
+    const response = await fetch(`http://localhost:4000/userroutes?userID=${userID}`);
     const data = await response.json();
     console.log(data);
 

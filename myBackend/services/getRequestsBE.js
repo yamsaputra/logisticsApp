@@ -14,6 +14,7 @@ export let getUserRoutes = express.Router();
  * @description Fetches a user by email in the database.
  * @method GET
  * @param {String} email 
+ * @returns {Object} returns 200 user found or 404 user not found.
  */
 getUser = async (req, res) => {
     try {
@@ -36,6 +37,7 @@ getUser = async (req, res) => {
  * @description Fetches a route by origin or destination in the database.
  * @method GET
  * @param {String} query
+ * @returns {Object} returns 200 route found or 404 route not found.
  */
 getRoute = async (req, res) => {
     try {
@@ -63,6 +65,9 @@ getRoute = async (req, res) => {
 /**
  * @URI /getRoutes
  * @description Fetches routes by origin or destination in the database.
+ * @method GET
+ * @param {String} query
+ * @returns {Object} returns 200 routes found or 404 routes not found.
  */
 getRoutes = async (req, res) => {
     try {
@@ -88,6 +93,13 @@ getRoutes = async (req, res) => {
     }
 };
 
+/**
+ * @URI /getUserRoutes
+ * @description Fetches routes by userID in the database.
+ * @method GET
+ * @param {String} userID
+ * @returns {Object} returns 200 user routes found or 404 user routes not found.
+ */
 getUserRoutes = async (req, res) => {
     try {
         const { userID } = req.query;

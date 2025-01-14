@@ -1,12 +1,21 @@
+// Framework import statements.
 import express from "express";
 import bcrypt from "bcryptjs";
 import { register, User, registerRouteDB, Book } from "../sequelize.js";
 
+// Declaring export statements.
 export let loginUser = express.Router();
 export let registerUser = express.Router();
 export let registerRouteBE = express.Router();
 export let bookRouteBE = express.Router();
 
+/**
+ * @URI /register
+ * @description Registers a new user in the database.
+ * @method POST
+ * @param {String} firstName, lastName, age, email, password
+ * @returns {Object} returns 201 user created or 400 user already exists.
+ */
 registerUser = async (req, res) => {
   try {
     const { firstName, lastName, age, email, password } = req.body;
@@ -41,6 +50,13 @@ registerUser = async (req, res) => {
   }
 };
 
+/**
+ * @URI /login
+ * @description Logs in a user in the database.
+ * @method POST
+ * @param {String} email, password
+ * @returns {Object} returns 200 login successful or 401 invalid password.
+ */
 loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -67,6 +83,13 @@ loginUser = async (req, res) => {
   }
 };
 
+/**
+ * @URI /registerRoute
+ * @description Registers a new route in the database.
+ * @method POST
+ * @param {String} origin, destination, date, time, seats, price, user_id
+ * @returns {Object} returns 201 route registered or 500 error registering route.
+ */
 registerRouteBE = async (req, res) => {
   try {
     console.log("bringDataBodyBE:", req.body);
@@ -95,6 +118,13 @@ registerRouteBE = async (req, res) => {
   }
 };
 
+/**
+ * @URI /bookRoute
+ * @description Books a route in the database.
+ * @method POST
+ * @param {String} user_id, ride_id
+ * @returns {Object} returns 201 route booked, 400 route already booked or 500 error booking route.
+ */
 bookRouteBE = async (req, res) => {
   try {
     const { user_id, ride_id } = req.body;

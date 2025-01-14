@@ -1,13 +1,13 @@
 // Services for POST requests on the Frontend side.
 
 /**
- *
- * @param {*} formData
- * @returns
+ * @description This function sends a POST request to the backend to register a new user.
+ * @param {formData} formData
+ * @returns {Promise<JSON>} A promise that resolves to the registerUser function.
  */
 export async function registerUser(formData) {
   try {
-    const response = await fetch("http://35.233.101.171:4000/register", {
+    const response = await fetch("http://localhost:4000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,15 +33,15 @@ export async function registerUser(formData) {
 }
 
 /**
- *
- * @param {*} loginData
- * @returns
+ * @description This function sends a POST request to the backend to log in a user.
+ * @param {JSON} loginData
+ * @returns {Promise<JSON>} A promise that resolves to the loginUser function in LoginPage.vue.
  */
 export async function loginUser(loginData) {
   try {
     const { email, password } = loginData;
 
-    const response = await fetch("http://35.233.101.171:4000/login", {
+    const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,10 +71,10 @@ export async function loginUser(loginData) {
 }
 
 /**
- *
- * @param {*} bringData
- * @param {*} userID
- * @returns
+ * @description This function sends a POST request to the backend to register a new route.
+ * @param {formData} bringData
+ * @param {String} userID
+ * @returns {Promise<JSON>} A promise that resolves to the registerRoute function in BringPage.vue.
  */
 export async function registerRoute(bringData, userID) {
   try {
@@ -85,7 +85,7 @@ export async function registerRoute(bringData, userID) {
       user_id: userID,
     };
 
-    const response = await fetch("http://35.233.101.171:4000/bring", {
+    const response = await fetch("http://localhost:4000/bring", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -108,10 +108,10 @@ export async function registerRoute(bringData, userID) {
 }
 
 /**
- *
- * @param {*} rideID
- * @param {*} userID
- * @returns
+ * @description This function sends a POST request to the backend to book a route.
+ * @param {Int} rideID
+ * @param {String} userID
+ * @returns {Promise<JSON>} A promise that resolves to the bookRoute function in RoutePage.vue.
  */
 export async function bookRoute(rideID, userID) {
   try {
@@ -122,7 +122,7 @@ export async function bookRoute(rideID, userID) {
       ride_id: rideID,
     };
 
-    const response = await fetch("http://35.233.101.171:4000/book", {
+    const response = await fetch("http://localhost:4000/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
