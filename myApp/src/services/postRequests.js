@@ -1,5 +1,5 @@
 // Services for POST requests on the Frontend side.
-
+// 
 /**
  * @description This function sends a POST request to the backend to register a new user.
  * @param {formData} formData
