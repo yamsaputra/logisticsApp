@@ -21,6 +21,11 @@ Create fitness functions?
 
 12.01.2024
 
+18.01.2024
+-GKE Workflow recently created for the Server backend. (on the bus without internet and must be double checked for Syntax errors.
+-Refactoring middleware and inline documentations.
+    1. postRequests.js
+
 
 ### Continuos Delivery Pipeline and technical details
 12.01.2024

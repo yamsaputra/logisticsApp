@@ -1,5 +1,5 @@
-// Services for POST requests on the Frontend side.
-// 
+// Services for POST requests on the Frontend side communicating with the Backend services.
+
 /**
  * @description This function sends a POST request to the backend to register a new user.
  * @param {formData} formData
@@ -27,15 +27,18 @@ export async function registerUser(formData) {
 
     return data;
   } catch (error) {
-    console.error("registerUser: Internal Server Error 500:", error);
-    return { success: false, message: "Request to the server failed." };
+    console.error("registerUser() Internal Server Error 500:", error);
+    return { success: false, message: "Internal Server Error 500, please try again later." };
   }
 }
 
 /**
- * @description This function sends a POST request to the backend to log in a user.
+ * @description This function sends a Fetch POST request to the backend and receives a JSON as a promise.
  * @param {JSON} loginData
- * @returns {Promise<JSON>} A promise that resolves to the loginUser function in LoginPage.vue.
+ * @returns {Promise<JSON>} A promise that resolves to the loginUser function to LoginPage.vue.
+ * @returns {status} 200 when user successfully logins.
+ * @returns {status} 401 when user inputs incorrect password.
+ * @returns {status} 404 when E-Mail is not found in database.
  */
 export async function loginUser(loginData) {
   try {
@@ -59,22 +62,24 @@ export async function loginUser(loginData) {
       return { status: response.status, data };
     } else if (response.status === 401 || response.status === 404) {
       console.error("loginUser() Response was not OK:", response);
-      return { status: response.status, message: "Incorrect E-Mail or Password", data };
+      return { status: response.status, message: "E-Mail not found 404 or password incorrect 401", data };
     } else {
       console.error("loginUser() Response was not OK:", response);
       return { status: response.status, message: "An unexpected error occurred.", data };
     }
   } catch (error) {
-    console.error("loginUser: Internal Server Error 500:", error);
+    console.error("loginUser() Internal Server Error 500:", error);
     return data;
   }
 }
 
 /**
- * @description This function sends a POST request to the backend to register a new route.
+ * @description This function sends a Fetch POST request to the backend to register a new route.
  * @param {formData} bringData
  * @param {String} userID
- * @returns {Promise<JSON>} A promise that resolves to the registerRoute function in BringPage.vue.
+ * @returns {Promise<JSON>} A promise that resolves to registerRoute() in BringPage.vue.
+ * @returns {status} 201 when a route is registered succesfully.
+ * @returns {status} 500 when a route fails to register or an Internal Server Error occurs.
  */
 export async function registerRoute(bringData, userID) {
   try {
@@ -96,22 +101,24 @@ export async function registerRoute(bringData, userID) {
     const data = await response.json();
 
     if (response.status === 201) {
-      console.log("Travel route created successfully.");
-      return { success: true, message: data.message };
+      console.log("registerRoute() Created 201: Travel route created successfully.");
+      return { success: true, message: data.message, status: 201 };
     }
 
     return data;
   } catch (error) {
-    console.error("registerRoute: Internal Server Error 500:", error);
-    return { success: false, message: "Request to the server failed." };
+    console.error("registerRoute() Internal Server Error 500: Failed to register route.", error);
+    return { success: false, message: "Internal Server Error 500, please try again later.", status: 500 };
   }
 }
 
 /**
- * @description This function sends a POST request to the backend to book a route.
+ * @description This function sends a Fetch POST request to the backend to book a route.
  * @param {Int} rideID
  * @param {String} userID
- * @returns {Promise<JSON>} A promise that resolves to the bookRoute function in RoutePage.vue.
+ * @returns {Promise<JSON>} A promise that resolves to bookRoute() in RoutePage.vue.
+ * @returns {status} 201 when a route is created successfuly.
+ * @returns {status}
  */
 export async function bookRoute(rideID, userID) {
   try {
