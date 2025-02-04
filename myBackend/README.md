@@ -50,3 +50,13 @@ backend-1   |       at Packet.asError (/backendApp/node_modules/mysql2/lib/packe
 
 21.12.2024
 -renamed 'flyer_db' to 'tt_db'
+
+13.01.2025
+-Database and Backend are not running on GKE server but because it doesn't support https, it is not possible to connect with the Frontend running on CloudRun
+
+-An attempt to implement a TLS Certificate to the backend to make it https was made, but the verification of the certificate was still not possible.
+
+03.02.2025 - Back on the saddle preparing for my report.
+- Installed Prometheus and implementing it ot the backend server.
+-Backend server (server.js) now supports the monitoring of processes with the promClient library 
+- Still need to integrate this system on the backend kubernetes and link it to the Prometheus application installed on the system.

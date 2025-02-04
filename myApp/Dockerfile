@@ -8,11 +8,6 @@ WORKDIR /frontendApp
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Set NPM timeout
-RUN npm config set fetch-timeout 60000
-RUN npm config set registry https://registry.npmjs.org/
-
-
 # Building code for production
 # RUN npm ci --only=production
 RUN npm install

@@ -92,5 +92,8 @@ To do: loginPage
 
 - FrontEnd Beta version completed.
 
+04.02.2025
+-Successfully pushed the dockerimage on to kubernetes but the frontend isnt correctly installed so only the login page loads
+-Deployment text file created to plan the Workflow for Continuous Integration
 
 

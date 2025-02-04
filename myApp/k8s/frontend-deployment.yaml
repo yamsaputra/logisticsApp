@@ -24,8 +24,6 @@ spec:
           limits:
             memory: "6Gi"
             cpu: "1500m"
-      imagePullSecrets:
-      - name: gcr-json-key
 ---
 apiVersion: v1
 kind: Service
