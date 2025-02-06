@@ -1,4 +1,4 @@
-// Services for POST requests on the Frontend side communicating with the Backend services.
+// Services for POST requests from the Frontend to the Backend services.
 
 /**
  * @description This function sends a POST request to the backend to register a new user.
@@ -7,7 +7,7 @@
  */
 export async function registerUser(formData) {
   try {
-    const response = await fetch("http://localhost:4000/register", {
+    const response = await fetch(`http://${import.meta.env.VITE_BACKEND}:4000/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export async function loginUser(loginData) {
   try {
     const { email, password } = loginData;
 
-    const response = await fetch("http://localhost:4000/login", {
+    const response = await fetch(`http://${import.meta.env.VITE_BACKEND}:4000/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export async function registerRoute(bringData, userID) {
       user_id: userID,
     };
 
-    const response = await fetch("http://localhost:4000/bring", {
+    const response = await fetch(`http://${import.meta.env.VITE_BACKEND}:4000/bring`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +129,7 @@ export async function bookRoute(rideID, userID) {
       ride_id: rideID,
     };
 
-    const response = await fetch("http://localhost:4000/book", {
+    const response = await fetch(`http://${import.meta.env.VITE_BACKEND}:4000/book`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

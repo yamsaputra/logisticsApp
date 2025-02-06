@@ -10,6 +10,12 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 8080,
+    strictPort: true,
+    hmr: {
+      host: "130.211.105.53",
+      port: 8080,
+      protocol: "ws",
+    },
   },
   resolve: {
     alias: {

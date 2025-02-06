@@ -67,7 +67,7 @@ ion-content {
       <ion-grid>
         <ion-row>
           <ion-col size="10" class="logoBox">
-            <ion-img src="/src/assets/logo/TrustTrip.png" alt="Logo" class="logo"></ion-img>
+            <ion-img src="/assets/logo/TrustTrip.png" alt="Logo" class="logo"></ion-img>
           </ion-col>
         </ion-row>
 

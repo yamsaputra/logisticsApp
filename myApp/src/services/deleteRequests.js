@@ -1,3 +1,5 @@
+// Services for DELETE requests from the Frontend to the Backend services.
+
 /**
  * @description This function deletes a package from the database.
  * @param {String} routeID Receives the routeID of the route to be deleted from PackagePage.vue.
@@ -5,7 +7,7 @@
  */
 export async function deleteRoute(routeID) {
   try {
-    const response = await fetch(`http://localhost:4000/deleteRoute?routeID=${routeID}`, {
+    const response = await fetch(`http://${import.meta.env.VITE_BACKEND}:4000/deleteRoute?routeID=${routeID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"

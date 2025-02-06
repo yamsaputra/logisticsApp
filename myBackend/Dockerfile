@@ -1,5 +1,5 @@
 # Node.js image & version
-FROM node:23.1.0
+FROM node:22.12.0
 
 # Set the working directory
 WORKDIR /backendApp

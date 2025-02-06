@@ -1,22 +1,26 @@
-# Node.js image & version
-FROM node:23.1.0
+# Use an official Node.js runtime as a parent image
+FROM node:22.12.0
 
-# Working directory
+# Set the working directory
 WORKDIR /frontendApp
 
-# Install dependencies
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Building code for production
-# RUN npm ci --only=production
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code/Bundle app source.
+# Copy the rest of the application code
 COPY . .
+
+# Build the application
+RUN npm run build
+
+# Install serve to serve the build
+RUN npm install -g serve
 
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["serve", "-s", "browser", "-l", "8080"]
