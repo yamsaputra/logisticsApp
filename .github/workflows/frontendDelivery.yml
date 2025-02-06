@@ -39,10 +39,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Github Actions Authorization for Google Cloud Setup
-        uses: "google-github-actions/auth@v2"
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
-          credentials_json: ${{ secrets.GCR_TT_KEY }}
+          service_account_key: ${{ secrets.GKE_TT_KEY }}
+          project_id: trusttrip-447621
 
       - name: Configure kubectl
         run: |
