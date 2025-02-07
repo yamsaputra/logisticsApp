@@ -29,3 +29,16 @@ spec:
           limits:
             memory: "6Gi"
             cpu: "1500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
