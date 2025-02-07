@@ -45,18 +45,19 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: Checkout code
+      - name: Deploy to Google Kubernetes Engine
         uses: actions/checkout@v4
 
-      - name: Apply Kubernetes configuration
-        uses: actions-hub/kubectl@master
+
+      - uses: actions/checkout@v4
+      - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: apply -f myApp/k8s/frontend-deployment.yaml
 
-      - name: Rollout restart deployment
-        uses: actions-hub/kubectl@master
+      - uses: actions-hub/kubectl@master
+      - uses: actions/checkout@v4
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
