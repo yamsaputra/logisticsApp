@@ -43,33 +43,28 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install Google Cloud SDK and gke-gcloud-auth-plugin
-        run: |
-          curl -sSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-          sudo apt-get update && sudo apt-get install -y google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin
-          echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
-  
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCR_TT_KEY }}
 
-      - name: Configure Kubernetes Credentials
+      - name: Install kubectl
         run: |
-          gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1 --project trusttrip-447621
+          sudo apt-get update && sudo apt-get install -y kubectl
 
-      - name: Verify Authentication
-        run: kubectl get nodes
+      - name: Get GKE Credentials
+        run: |
+          gcloud container clusters get-credentials my-cluster \
+            --region my-region \
+            --project trusttrip-447621
 
-      - name: Deploy to Google Kubernetes Engine
+      - name: Deploy to Kubernetes
         run: kubectl apply -f myApp/k8s/frontend-deployment.yaml
 
       - name: Restart frontend deployment
         run: kubectl rollout restart deployment/frontend
+
