@@ -48,29 +48,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install gcloud and gke-gcloud-auth-plugin
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates gnupg
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-cli
-          gcloud components install gke-gcloud-auth-plugin
-
-      - name: Decode KUBE_CONFIG and set up kubectl
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
-
       - name: Apply Kubernetes configuration
         uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: apply -f myApp/k8s/frontend-deployment.yaml
 
       - name: Rollout restart deployment
         uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: rollout restart deployment/frontend
