@@ -19,6 +19,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Install Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: 'latest'
+      
+      - name: Install kubectl and gke-gcloud-auth-plugin
+        run: |
+            gcloud components install kubectl
+            gcloud components install gke-gcloud-auth-plugin
+            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
 
       - name: Github Actions Authorization for Google Cloud Setup
         uses: google-github-actions/auth@v2
@@ -46,8 +57,15 @@ jobs:
 
     steps:
       - name: Deploy to Google Kubernetes Engine
-        uses: actions/checkout@v4
-
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          credentials: ${{ secrets.GCR_TT_KEY }}
+          image: gcr.io/trusttrip-447621/frontend:latest
+          service: frontend-service
+          region: europe-west1
+          platform: managed
+          allow-unauthenticated: true
+          port: 8080
 
       - uses: actions/checkout@v4
       - uses: actions-hub/kubectl@master
