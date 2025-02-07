@@ -78,5 +78,4 @@ jobs:
         run: kubectl apply -f myApp/k8s/frontend-deployment.yaml
 
       - name: Restart frontend deployment
-        run: kubectl rollout restart deployment/frontend
-
+        run: kubectl rollout restart deployment/frontend-deployment
