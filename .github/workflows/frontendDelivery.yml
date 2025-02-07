@@ -33,7 +33,7 @@ jobs:
         with:
           registry: gcr.io
           username: _json_key
-          password: ${{ secrets.GKE_TT_KEY }}
+          password: ${{ secrets.GCR_TT_KEY }}
 
       - name: Build and push frontend Docker image
         run: |
