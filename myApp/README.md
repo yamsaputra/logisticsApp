@@ -1,4 +1,10 @@
 ## TrustTrip FRONTEND
+
+### Latest Update
+Date | Description | Version
+ --- | --- | --- 
+7.02.2025 | Frontend deployed to K8s with the Github Action Workflow | 0.6.6
+
 ### Change-/Errorlogs:
 
 31.10.2024
@@ -95,5 +101,8 @@ To do: loginPage
 04.02.2025
 -Successfully pushed the dockerimage on to kubernetes but the frontend isnt correctly installed so only the login page loads
 -Deployment text file created to plan the Workflow for Continuous Integration
+
+7.02.2025
+-Created K8s workflow for the Frontend.
 
 

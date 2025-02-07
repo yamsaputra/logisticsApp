@@ -1,4 +1,10 @@
 ## TrustTrip BACKEND
+
+### Latest Update per Beta-Version Deployment
+Date | Description | Version
+ --- | --- | --- 
+7.02.2025 | Backend deployed to K8s with the Github Action Workflow | 0.6.6
+
 ### Change-/Errorlogs:
 
 31.10.2024
@@ -60,3 +66,6 @@ backend-1   |       at Packet.asError (/backendApp/node_modules/mysql2/lib/packe
 - Installed Prometheus and implementing it ot the backend server.
 -Backend server (server.js) now supports the monitoring of processes with the promClient library 
 - Still need to integrate this system on the backend kubernetes and link it to the Prometheus application installed on the system.
+
+7.02.2025
+-Created K8s workflow for the Backend.
