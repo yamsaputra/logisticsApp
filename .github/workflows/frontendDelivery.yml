@@ -40,7 +40,7 @@ jobs:
           docker build -t gcr.io/trusttrip-447621/frontend:latest ./myApp
           docker push gcr.io/trusttrip-447621/frontend:latest
 
- deploy:
+  deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
 
