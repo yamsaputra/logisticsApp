@@ -28,7 +28,8 @@ jobs:
         uses: "docker/login-action@v2"
         with:
           registry: gcr.io
-          credentials_json: ${{ secrets.GKE_TT_KEY }}
+          username: _json_key
+          password: ${{ secrets.GKE_TT_KEY }}
 
       - name: Build and push frontend Docker image
         run: |
