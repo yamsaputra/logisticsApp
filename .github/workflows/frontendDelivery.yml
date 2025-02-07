@@ -19,19 +19,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Install Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: 'latest'
-      
-      - name: Install kubectl and gke-gcloud-auth-plugin
-        run: |
-            gcloud components install kubectl
-            gcloud components install gke-gcloud-auth-plugin
-            echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
 
-      - name: Github Actions Authorization for Google Cloud Setup
+      - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCR_TT_KEY }}
@@ -56,27 +45,28 @@ jobs:
     needs: build-and-push
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: 'latest'
+
+      - name: Ensure gke-gcloud-auth-plugin is used
+        run: echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCR_TT_KEY }}
+
+      - name: Configure Kubernetes Credentials
+        run: |
+          gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1 --project trusttrip-447621
+
       - name: Deploy to Google Kubernetes Engine
-        uses: google-github-actions/deploy-cloudrun@main
-        with:
-          credentials: ${{ secrets.GCR_TT_KEY }}
-          image: gcr.io/trusttrip-447621/frontend:latest
-          service: frontend-service
-          region: europe-west1
-          platform: managed
-          allow-unauthenticated: true
-          port: 8080
+        run: kubectl apply -f myApp/k8s/frontend-deployment.yaml
 
-      - uses: actions/checkout@v4
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: apply -f myApp/k8s/frontend-deployment.yaml
-
-      - uses: actions-hub/kubectl@master
-      - uses: actions/checkout@v4
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: rollout restart deployment/frontend
+      - name: Restart frontend deployment
+        run: kubectl rollout restart deployment/frontend
