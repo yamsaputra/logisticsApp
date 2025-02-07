@@ -5,8 +5,8 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
+      branches:
+        - main
 
 jobs:
   build-and-push:
@@ -48,22 +48,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: 'latest'
-
-      - name: Ensure gke-gcloud-auth-plugin is used
-        run: echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+      - name: Install Google Cloud SDK and gke-gcloud-auth-plugin
+        run: |
+          sudo apt-get update && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+          echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCR_TT_KEY }}
 
-      - name: Configure Kubernetes Credentials.
+      - name: Configure Kubernetes Credentials
         run: |
           gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1 --project trusttrip-447621
+
+      - name: Verify Authentication
+        run: kubectl get nodes
 
       - name: Deploy to Google Kubernetes Engine
         run: kubectl apply -f myApp/k8s/frontend-deployment.yaml
