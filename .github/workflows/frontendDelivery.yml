@@ -55,11 +55,15 @@ jobs:
 
       - name: Install gcloud components
         run: |
-          gcloud components install gke-gcloud-auth-plugin
+          sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg
+           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+           sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+           gcloud components install gke-gcloud-auth-plugin
 
       - name: Configure kubectl
-        env: 
-          USE_GKE_GCLOUD_AUTH_PLUGIN: "true"
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
         run: |
           gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1
           kubectl apply -f myApp/k8s/frontend-deployment.yaml
