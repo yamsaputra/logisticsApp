@@ -1,4 +1,4 @@
-name: GKE Frontend CI/CD Pipeline
+name: Google K8s Frontend CI/CD Pipeline
 
 on:
   push:
