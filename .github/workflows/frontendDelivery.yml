@@ -61,7 +61,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCR_TT_KEY }}
 
-      - name: Configure Kubernetes Credentials
+      - name: Configure Kubernetes Credentials.
         run: |
           gcloud container clusters get-credentials trusttrip-server-cluster --region europe-west1 --project trusttrip-447621
 
