@@ -10,6 +10,7 @@ export default {
         confirmPassword: "Confirm Password",
         signUp: "Sign Up",
         login: "Continue to Log In",
+        signUpSuccess: "Sign Up Successful!",
     },
     de: {
         greeting: "Registrieren bei TrustTrip",
@@ -22,6 +23,7 @@ export default {
         confirmPassword: "Passwort bestätigen",
         signUp: "Registrieren",
         login: "Weiter zum Einloggen",
+        signUpSuccess: "Registrierung erfolgreich!",
     },
     id: {
         greeting: "Daftar Jasa Titip",
@@ -34,5 +36,6 @@ export default {
         confirmPassword: "Konfirmasi kata sandi",
         signUp: "Daftar",
         login: "Lanjut ke Login",
+        signUpSuccess: "Pendaftaran berhasil!",
     },
 }

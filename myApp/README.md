@@ -3,7 +3,7 @@
 ### Latest Update
 Date | Description | Version
  --- | --- | --- 
-7.02.2025 | Frontend deployed to K8s with the Github Action Workflow | 0.6.6
+7.02.2025 | Updated internationalization alert message on the sign up page. | 0.6.7
 
 ### Change-/Errorlogs:
 
@@ -104,5 +104,9 @@ To do: loginPage
 
 7.02.2025
 -Created K8s workflow for the Frontend.
+
+11.02.2025
+-Refresh slide down not functioning in browser build.
+-Sign up success alert message updated.
 
 

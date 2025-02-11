@@ -9,7 +9,8 @@ myApp | Frontend directory containing source code, services, Browser build, To-I
 myBackend | Backend directory containing the main server.js file, services & K8s deployment file.  | 7.02.2025
 myDatabase | Database directory containg the K8s deployment file.  | 7.02.2025
 
-> The myApp and myBackend directory each contains Change-Logs.
+- Change-Logs located in each Front- and  Backend directory.
+- *services* directory contains local CRUD / API Interface scripts.
 
 ### Link to running deployed build K8s Server
 >  130.211.105.53:8080
