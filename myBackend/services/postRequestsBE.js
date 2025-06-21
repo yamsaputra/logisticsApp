@@ -4,19 +4,22 @@ import bcrypt from "bcryptjs";
 import { register, User, registerRouteDB, Book } from "../sequelize.js";
 
 // Declaring export statements.
-export let loginUser = express.Router();
-export let registerUser = express.Router();
-export let registerRouteBE = express.Router();
-export let bookRouteBE = express.Router();
+export const loginUser = express.Router();
+export const registerUser = express.Router();
+export const registerRouteBE = express.Router();
+export const bookRouteBE = express.Router();
 
 /**
  * @URI /register
  * @description Registers a new user in the database.
  * @method POST
  * @param {String} firstName, lastName, age, email, password
- * @returns {Object} returns 201 user created or 400 user already exists.
+ * @returns {Object} 201 Created - user created
+ * @throws {Error} 400 Bad Request - user already exists.
  */
-registerUser = async (req, res) => {
+registerUser.post('/', async (req, res) => {
+  console.log("pRBE: Registering user with data:", req.body);
+
   try {
     const { firstName, lastName, age, email, password } = req.body;
 
@@ -48,16 +51,18 @@ registerUser = async (req, res) => {
       .status(500)
       .json({ success: false, error: "Error creating user" });
   }
-};
+});
 
 /**
  * @URI /login
- * @description Logs in a user in the database.
+ * @description Logs in a user registered in the database.
  * @method POST
- * @param {String} email, password
- * @returns {Object} returns 200 login successful or 401 invalid password.
+ * @param {String} req.body.email
+ * @param {String} req.body.password
+ * @returns {Object} 200 OK login successful 
+ * @throws  401 Unauthorized invalid password.
  */
-loginUser = async (req, res) => {
+loginUser.post('/', async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -70,7 +75,7 @@ loginUser = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid password." });
+      return res.status(401).json({ error: "Invalid password or e-mail." });
     }
     if (isPasswordValid && user) {
       console.log("pRBE: User logged in", user);
@@ -79,9 +84,10 @@ loginUser = async (req, res) => {
     }
   } catch (error) {
     console.error("pRBE: Error logging in user", error);
-    return res.status(500).json({ error: "Error logging in user." });
+    return res.status(500).json({ error: "Error logging in user."
+     });
   }
-};
+});
 
 /**
  * @URI /registerRoute
@@ -90,7 +96,7 @@ loginUser = async (req, res) => {
  * @param {String} origin, destination, date, time, seats, price, user_id
  * @returns {Object} returns 201 route registered or 500 error registering route.
  */
-registerRouteBE = async (req, res) => {
+registerRouteBE.post('/', async (req, res) => {
   try {
     console.log("bringDataBodyBE:", req.body);
     const { user_id, ...bringDataBE } = req.body;
@@ -116,16 +122,18 @@ registerRouteBE = async (req, res) => {
       .status(500)
       .json({ success: false, error: "Error registering route." });
   }
-};
+});
 
 /**
  * @URI /bookRoute
  * @description Books a route in the database.
  * @method POST
  * @param {String} user_id, ride_id
- * @returns {Object} returns 201 route booked, 400 route already booked or 500 error booking route.
+ * @returns {Object} returns 201 route booked, 
+ * @throws 400 route already booked 
+ * @throws 500 error booking route.
  */
-bookRouteBE = async (req, res) => {
+bookRouteBE.post('/', async (req, res) => {
   try {
     const { user_id, ride_id } = req.body;
 
@@ -143,5 +151,5 @@ bookRouteBE = async (req, res) => {
     console.error("Error booking route", error);
     return res.status(500).json({ success: false, error: "Error booking route." });
   }
-};
+});
 

@@ -3,7 +3,7 @@
 ### Latest Update
 Date | Description | Version
  --- | --- | --- 
-7.02.2025 | Updated internationalization alert message on the sign up page. | 0.6.7
+11.02.2025 | Updated internationalization alert message on the sign up page. | 0.6.7
 
 ### Change-/Errorlogs:
 
@@ -109,4 +109,6 @@ To do: loginPage
 -Refresh slide down not functioning in browser build.
 -Sign up success alert message updated.
 
-
+12.04.2025
+-listPage bug when refreshing via pull down
+-booked routes not showing up in contract page

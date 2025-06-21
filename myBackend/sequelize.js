@@ -6,27 +6,32 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Database connection/configuration.
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  dialect: "mysql",
-  dialectOptions: {
-    connectTimeout: 60000,
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: "mysql",
+    dialectOptions: {
+      connectTimeout: 60000,
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 async function testConnection() {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Unable to connect to the database:", error);
   }
 }
 
@@ -35,15 +40,27 @@ testConnection();
 async function syncModels() {
   try {
     await sequelize.sync({ alter: true });
-    console.log('Models synchronized successfully.');
+    console.log("Models synchronized successfully.");
   } catch (error) {
-    console.error('Error synchronizing models:', error);
+    console.error("Error synchronizing models:", error);
   }
 }
 
 syncModels();
 
 // Define the user model
+/**
+ * @description Defines the user model.
+ * @returns {Sequelize.Model} The user model.
+ * @typedef {Object} User
+ * @property {number} user_id - The unique identifier for the user.
+ * @property {string} fname - The first name of the user.
+ * @property {string} lname - The last name of the user.
+ * @property {number} age - The age of the user.
+ * @property {string} email - The email address of the user.
+ * @property {string} password - The hashed password of the user.
+ * @property {Date} dateJoined - The date the user joined.
+ */
 const User = sequelize.define(
   "users",
   {
@@ -218,6 +235,15 @@ alterTable().catch((err) => {
 });
 
 // Create a new user
+/**
+ * @method
+ * @param {*} fname
+ * @param {*} lname
+ * @param {*} age
+ * @param {*} email
+ * @param {*} hashedPassword
+ * @returns
+ */
 async function register(fname, lname, age, email, hashedPassword) {
   try {
     const newUser = await User.create({
